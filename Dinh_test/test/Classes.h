@@ -20,13 +20,13 @@ class cPeople
 public:
 	cPeople();
 	cPeople(int x, int y, int level);
-	void setMap(int width, int length);
 	void Up();
 	void Left();
 	void Right();
 	void Down();
 	bool printPpl();
 	bool isImpact(std::vector<obstacle> o);
+	void setMap(int width, int length);
 	friend class cGame;
 };
 
@@ -37,9 +37,9 @@ class cGame
 	bool IS_RUNNING = false;
 	public:
 		void addObstacle(int lane);
-		void draw();						//draw map and control player's status
+		void draw();								//draw map and control player's status
 		void gameplay();
-		void bgWork();						//control obstacle
+		void bgWork();								//control obstacle
 		void setLanes();
 		void obstacleGenerate();
 
