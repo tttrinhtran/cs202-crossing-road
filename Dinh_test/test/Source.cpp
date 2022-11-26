@@ -1,21 +1,12 @@
 #include "Header.h"
-#include "classes.h"
+#include "cPeople.h"
 
 int main()
 {
-	srand(time(NULL));
 	cGame g;
-
-	// running game
-	g.setLanes();
-	std::thread t1(bgWork, std::ref(g));
-	std::thread t2(generator, std::ref(g));
+	g.addObstacle(5);
+	g.addObstacle(10);
+	g.addObstacle(15);
 	g.gameplay();
-	gotoXY(0, 0);
-	std::cout << "dead";
-	t1.join();
-	t2.join();
-	// game finished
-
 	return 0;
 }

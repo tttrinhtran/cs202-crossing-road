@@ -32,7 +32,7 @@
     <ClInclude Include="Header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Classes.h">
+    <ClInclude Include="cPeople.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
