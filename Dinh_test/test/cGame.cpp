@@ -1,20 +1,17 @@
-#include "cPeople.h"
+#include "Classes.h"
 #include "Header.h"
 
 void cGame::addObstacle(int lane)
 {
-	while (oVector.size() < lane)
-	{
-		std::vector<obstacle> v;
-		oVector.push_back(v);
-	}
+	if (lane - 1 >= player.length) return;
 	obstacle a;
 	oVector[lane - 1].push_back(a);
 }
 
-void cGame::consoleWork(cPeople player)
+void cGame::draw()
 {
 	int lane = player.mY;
+	system("cls");
 	for (int i = 0; i < oVector.size(); i++)
 	{
 		for (int k = 0; k < oVector[i].size(); k++)
@@ -29,9 +26,9 @@ void cGame::consoleWork(cPeople player)
 
 void cGame::gameplay()
 {
-	FixConsoleWindow();
-	cPeople player;
+	FixConsoleWindow(); 
 	char c = 's';
+	IS_RUNNING = true;
 	while (c != (char)27)
 	{
 		c = _getch();
@@ -51,7 +48,47 @@ void cGame::gameplay()
 			break;
 		}
 		system("cls");
-		consoleWork(player);
-		if (player.Level == 0) return;
+		draw();
+		if (player.Level == 0)
+		{
+			IS_RUNNING = false;
+			return;
+		}
 	}
+}
+
+void cGame::setLanes()
+{
+	while (oVector.size() < player.length)
+	{
+		std::vector<obstacle> lane;
+		oVector.push_back(lane);
+	}
+}
+
+void cGame::bgWork()
+{
+	for (int i = 0; i < oVector.size(); i++)
+	{
+		for (int k = 0; k < oVector[i].size(); k++)
+		{
+			oVector[i][k].mX++;
+			if (oVector[i][k].mX == player.width)
+			{
+				std::swap(oVector[i][k], oVector[i][oVector[i].size() - 1]);
+				oVector[i].pop_back();
+				k--;
+			}
+		}
+	}
+}
+
+void cGame::obstacleGenerate()
+{
+	int lane = rand() % (player.length-3) + 2;
+	if (oVector[lane].size() > 0)
+	{
+		if (oVector[lane][oVector[lane].size() - 1].mX > 0) addObstacle(lane);
+	}
+	else addObstacle(lane);
 }

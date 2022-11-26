@@ -1,4 +1,4 @@
-#include "cPeople.h"
+#include "classes.h"
 #include "Header.h"
 
 cPeople::cPeople()
@@ -6,6 +6,8 @@ cPeople::cPeople()
 	mX = 0;
 	mY = 0;
 	Level = 1;
+	width = 20;
+	length = 20;
 }
 
 cPeople::cPeople(int x, int y,int level)
@@ -13,6 +15,15 @@ cPeople::cPeople(int x, int y,int level)
 	mX = x;
 	mY = y;
 	Level = level;
+	width = 20;
+	length = 20;
+}
+
+//function
+void cPeople::setMap(int width, int length)
+{
+	this->width = width;
+	this->length = length;
 }
 
 void cPeople::Up()
@@ -27,12 +38,12 @@ void cPeople::Left()
 
 void cPeople::Right()
 {
-	if (mX<20) mX++;
+	if (mX<width-1) mX++;
 }
 
 void cPeople::Down()
 {
-	if (mY<20) mY++;
+	if (mY<length-1) mY++;
 }
 
 bool cPeople::printPpl()
