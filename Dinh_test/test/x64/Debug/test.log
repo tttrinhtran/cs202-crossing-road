@@ -1,2 +1,5 @@
-﻿  cGame.cpp
+﻿  Source.cpp
+C:\Users\Admin\Desktop\project\cs202-crossing-road\Dinh_test\test\Source.cpp(6,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  cGame.cpp
+  Generating Code...
   test.vcxproj -> C:\Users\Admin\Desktop\project\cs202-crossing-road\Dinh_test\x64\Debug\test.exe

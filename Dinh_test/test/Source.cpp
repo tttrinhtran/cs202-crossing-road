@@ -11,8 +11,6 @@ int main()
 	std::thread t1(bgWork, std::ref(g));
 	std::thread t2(generator, std::ref(g));
 	g.gameplay();
-	gotoXY(0, 0);
-	std::cout << "dead";
 	t1.join();
 	t2.join();
 	// game finished

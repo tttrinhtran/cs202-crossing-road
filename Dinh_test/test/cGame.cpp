@@ -25,6 +25,8 @@ void cGame::draw()
 	if (player.Level == 0)
 	{
 		IS_RUNNING = false;
+		gotoXY(0, 0);
+		std::cout << "dead";
 		return;
 	}
 }
