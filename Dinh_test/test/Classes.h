@@ -35,8 +35,6 @@ class cGame
 {
 	cPeople player;
 	std::vector<std::vector<obstacle*>> oVector;
-	std::vector<int> LaneWay;						//-5 -> -1 = right to left, 0 = side walk, 1 -> 5 = left to right
-	int sMod, oMod;
 	bool IS_RUNNING = false;
 	public:
 		void addObstacle(int lane);

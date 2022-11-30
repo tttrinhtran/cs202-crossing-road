@@ -1,7 +1,0 @@
-﻿  cGame.cpp
-  cPeople.cpp
-  Source.cpp
-D:\HCMUS\2ndyear\CS202\cs202-crossing-road\Main\test\Source.cpp(6,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  functions.cpp
-  Generating Code...
-  test.vcxproj -> D:\HCMUS\2ndyear\CS202\cs202-crossing-road\Main\x64\Debug\test.exe
