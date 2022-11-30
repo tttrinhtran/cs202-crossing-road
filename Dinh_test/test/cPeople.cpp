@@ -51,11 +51,11 @@ bool cPeople::printPpl()
 	return true;
 }
 
-bool cPeople::isImpact(std::vector<obstacle> o)
+bool cPeople::isImpact(std::vector<obstacle*> o)
 {
 	for (int i = 0; i < o.size(); i++)
 	{
-		if (mX == o[i].mX)
+		if (mX == o[i]->mX)
 		{
 			Level = 0;
 			return true;

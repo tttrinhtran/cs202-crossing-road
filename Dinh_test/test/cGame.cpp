@@ -4,7 +4,7 @@
 void cGame::addObstacle(int lane)
 {
 	if (lane - 1 >= player.length) return;
-	obstacle a;
+	obstacle *a=new obstacle;
 	oVector[lane - 1].push_back(a);
 }
 
@@ -16,7 +16,7 @@ void cGame::draw()
 	{
 		for (int k = 0; k < oVector[i].size(); k++)
 		{
-			gotoXY(oVector[i][k].mX, i);
+			gotoXY(oVector[i][k]->mX, i);
 			std::cout << "o";
 		}
 	}
@@ -54,7 +54,8 @@ void cGame::gameplay()
 			player.Right();
 			break;
 		}
-		//system("cls");
+		LevelUp();
+		system("cls");
 		draw();
 	}
 }
@@ -63,7 +64,7 @@ void cGame::setLanes()
 {
 	while (oVector.size() < player.length)
 	{
-		std::vector<obstacle> lane;
+		std::vector<obstacle*> lane;
 		oVector.push_back(lane);
 	}
 }
@@ -74,10 +75,11 @@ void cGame::bgWork()
 	{
 		for (int k = 0; k < oVector[i].size(); k++)
 		{
-			oVector[i][k].mX++;
-			if (oVector[i][k].mX == player.width)
+			oVector[i][k]->mX++;
+			if (oVector[i][k]->mX == player.width)
 			{
 				std::swap(oVector[i][k], oVector[i][oVector[i].size() - 1]);
+				delete oVector[i][oVector[i].size() - 1];
 				oVector[i].pop_back();
 				k--;
 			}
@@ -90,7 +92,7 @@ void cGame::obstacleGenerate()
 	int lane = rand() % (player.length - 3) + 2;
 	if (oVector[lane].size() > 0)
 	{
-		if (oVector[lane][oVector[lane].size() - 1].mX > 0)
+		if (oVector[lane][oVector[lane].size() - 1]->mX > 0)
 		{
 			addObstacle(lane);
 			gotoXY(0, lane-1);
@@ -103,4 +105,18 @@ void cGame::obstacleGenerate()
 		gotoXY(0, lane-1);
 		std::cout << "o";
 	}
+}
+
+void cGame::LevelUp()
+{
+	if (player.mY == player.length - 1)
+	{
+		player.Level++;
+		player.mY = 0;
+	}
+}
+
+int cGame::Obstacle_Speed_Modifier()
+{
+	return pow(1.02,player.Level);
 }

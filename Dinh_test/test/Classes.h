@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdio.h>
 #include <windows.h>
+#include <cmath>
 
 class obstacle
 {
@@ -25,7 +26,7 @@ public:
 	void Right();
 	void Down();
 	bool printPpl();
-	bool isImpact(std::vector<obstacle> o);
+	bool isImpact(std::vector<obstacle*> o);
 	void setMap(int width, int length);
 	friend class cGame;
 };
@@ -33,7 +34,8 @@ public:
 class cGame
 {
 	cPeople player;
-	std::vector<std::vector<obstacle>> oVector;
+	std::vector<std::vector<obstacle*>> oVector;
+	std::vector<int> LaneWay;						//-1 = right to left, 0 = side walk, 1 = left to right
 	bool IS_RUNNING = false;
 	public:
 		void addObstacle(int lane);
@@ -41,6 +43,8 @@ class cGame
 		void gameplay();
 		void bgWork();								//control obstacle
 		void setLanes();
+		void LevelUp();
+		int Obstacle_Speed_Modifier();
 		void obstacleGenerate();
 
 		friend void generator(cGame& g);

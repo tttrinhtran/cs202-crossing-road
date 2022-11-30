@@ -22,6 +22,7 @@ void generator(cGame& g)
 	while (g.IS_RUNNING == true)
 	{
 		delay = rand() % 1600000000 + 400000000;
+		delay /= g.Obstacle_Speed_Modifier();
 		g.obstacleGenerate();
 		sleep_for(nanoseconds(delay));
 	}
@@ -33,6 +34,6 @@ void bgWork(cGame& g)
 	{
 		g.bgWork();
 		g.draw();
-		sleep_for(nanoseconds(2000000000));
+		sleep_for(nanoseconds(1000000000/ g.Obstacle_Speed_Modifier()));
 	}
 }
