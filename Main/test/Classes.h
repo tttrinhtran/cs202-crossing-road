@@ -25,6 +25,8 @@ public:
 	void Left();
 	void Right();
 	void Down();
+	bool posXCheck(); 
+	bool posYCheck(); 
 	bool printPpl();
 	bool isImpact(std::vector<obstacle*> o);
 	void setMap(int width, int length);

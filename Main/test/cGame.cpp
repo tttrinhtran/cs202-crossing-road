@@ -36,7 +36,7 @@ void cGame::gameplay()
 	FixConsoleWindow();
 	char c = 's';
 	IS_RUNNING = true;
-	while (c != (char)27 && IS_RUNNING == true) // fix lai dieu kien cua (char)27
+	while (c != (char)27 && IS_RUNNING == true && player.posXCheck() && player.posYCheck()) // fix lai dieu kien cua (char)27
 	{
 		c = _getch();
 		switch (c)

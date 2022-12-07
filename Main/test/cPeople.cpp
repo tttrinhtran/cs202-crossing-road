@@ -22,23 +22,34 @@ cPeople::cPeople(int x, int y,int level)
 void cPeople::Up()
 {
 	if (mY>0) mY--;
+	if (mY == 0) mY = length - 1;
 }
 
 void cPeople::Left()
 {
 	if (mX>0) mX--;
+	if (mX == 0) mX = width - 1;
 }
 
 void cPeople::Right()
 {
 	if (mX<width-1) mX++;
+	if (mX == width - 1) mX = 0;
 }
 
 void cPeople::Down()
 {
 	if (mY<length-1) mY++;
+	if (mY == length - 1) mY = 0;
 }
 
+bool cPeople::posXCheck() {
+	return (mX <= width) ? 1 : 0;
+}
+
+bool cPeople::posYCheck() {
+	return (mY <= length) ? 1 : 0;
+}
 bool cPeople::printPpl()
 {
 	gotoXY(mX, mY);
@@ -55,7 +66,7 @@ bool cPeople::isImpact(std::vector<obstacle*> o)
 {
 	for (int i = 0; i < o.size(); i++)
 	{
-		if (mX == o[i]->mX)
+		if (mX == o[i]->mX || mY == o[i]->mX)
 		{
 			Level = 0;
 			return true;
