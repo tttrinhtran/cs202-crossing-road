@@ -1,6 +1,5 @@
 #include "Header.h"
 #include "Button.h"
-#include "Class.h"
 
 
 void menu(sf::RenderWindow &window, sf::Event &Event, sf::Text &startText, sf::Text &loadText, sf::Text &settingsText, int &current){
@@ -57,7 +56,7 @@ void setupText(sf::Text &text, std::string str, sf::Font &font, int size, int x,
     text.setPosition( x, y );
 }
 
-void setupLevel(sf::RenderWindow &window, sf::Font &font, sf::Event &Event, int &current, Player& p) {
+void setupLevel(sf::RenderWindow &window, sf::Font &font, sf::Event &Event, int &current, sf::Sprite &rect){
     sf::Texture Level;
     sf::Sprite LevelImage;
 
@@ -123,13 +122,7 @@ void setupLevel(sf::RenderWindow &window, sf::Font &font, sf::Event &Event, int 
                     current = 11;
                 }
             }
-                                              
-            case sf::Event::KeyPressed: {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                    current = 0; 
-                }
-            }
-            break;
+                break;
         }
     }
     if (current == 1) {
@@ -142,7 +135,7 @@ void setupLevel(sf::RenderWindow &window, sf::Font &font, sf::Event &Event, int 
         window.display();
     }
     if (current == 11){
-        setupGame(window, Event,p);
+        setupGame(window, "1", Event,rect);
     }
 
 }
