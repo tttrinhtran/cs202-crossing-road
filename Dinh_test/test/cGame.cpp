@@ -67,6 +67,15 @@ void cGame::setLanes()
 		std::vector<obstacle*> lane;
 		oVector.push_back(lane);
 	}
+	while (oVector.size() > player.length)
+	{
+		int last = oVector.size() - 1;
+		for (int i=0;i<oVector[last].size();i++)
+		{
+			delete oVector[last][i];
+		}
+		oVector.pop_back();
+	}
 }
 
 void cGame::bgWork()
