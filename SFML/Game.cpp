@@ -16,10 +16,11 @@ void UpdateMove( sf::Sprite &rect){
     }
 }
 
-void setupGame(sf::RenderWindow &window, std::string str, sf::Event &Event, sf::Sprite &rect){
+void setupGame(sf::RenderWindow &window, sf::Event &Event, Player& p){
     sf::Texture Level;
     sf::Sprite LevelImage;
-    str = "level" + str;
+    std::string str = "level" + std::to_string(p.getLevel());
+    
     Level.loadFromFile("pic/"+str+".png");
     LevelImage.setTexture(Level);
 
@@ -30,7 +31,7 @@ void setupGame(sf::RenderWindow &window, std::string str, sf::Event &Event, sf::
                     window.close();
                     break;
                 case sf::Event::KeyPressed:
-                    UpdateMove(rect);
+                    UpdateMove(p.getRect());
                     break;
             }
         }
@@ -38,7 +39,7 @@ void setupGame(sf::RenderWindow &window, std::string str, sf::Event &Event, sf::
         window.clear();
         window.draw(LevelImage);
         //rect.move(-5.f, -5.f);
-        window.draw(rect);
+        window.draw(p.getRect());
         window.display();
     }
 }

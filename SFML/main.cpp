@@ -4,13 +4,16 @@
 int width = 1920, height = 1080, current = 0;
 
 int main(){
-    sf::Texture santa;
+
+    Player p(0.4, 0.4, "santa", 900, 900, 1);
+    Obstacles o("santa", 0, 600, 2, 2, 0.4, 0.4);
+  /*  sf::Texture santa;
     sf::Sprite rect;
     santa.loadFromFile("pic/santa.png");
     rect.setTexture(santa);
     rect.setScale(0.4,0.4);
-    rect.setPosition(900,900);
-
+    rect.setPosition(900,900);*/
+ 
     sf::Texture background;
     sf::Sprite backgroundImage;
 
@@ -36,18 +39,20 @@ int main(){
         sf::Event Event;
 
         menu(window, Event, startText, loadText, settingsText, current);
-
         window.clear();
         if (current == 0) {
+            o.moveLeft();
             window.draw(backgroundImage);
             window.draw(startText);
             window.draw(loadText);
             window.draw(settingsText);
+            window.draw(o.getRect());
             window.display();
         }
         else if (current == 1){
-            setupLevel(window, font, Event, current, rect);
+            setupLevel(window, font, Event, current, p);
         }
+       
     }
     return 0;
 }

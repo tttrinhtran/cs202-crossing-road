@@ -4,6 +4,6 @@
 #include "Header.h"
 
 void UpdateMove( sf::Sprite &rect);
-void setupGame(sf::RenderWindow &window, std::string str, sf::Event &Event, sf::Sprite &rect);
+void setupGame(sf::RenderWindow &window, sf::Event &Event, Player& p);
 
 #endif //CROSSING_GAME_H
