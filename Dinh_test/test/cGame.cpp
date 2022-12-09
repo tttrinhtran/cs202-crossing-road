@@ -120,8 +120,11 @@ void cGame::LevelUp()
 {
 	if (player.mY == player.length - 1)
 	{
+		
+		player.length++;
 		player.Level++;
 		player.mY = 0;
+		setLanes();
 	}
 }
 
