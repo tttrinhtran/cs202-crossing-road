@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "Button.h"
 
 void Menu::initVariables()
 {
@@ -86,9 +87,10 @@ int Menu::renderMain()
 			}
 			clock.restart().asSeconds();
 		}
+		renderSprite(*window, bgSprite);
 		window->display();
 	}
-	return 4; //	RE-CHECK
+	return 4; // RECHECK
 }
 
 int Menu::newGame(const int& level)
@@ -103,7 +105,7 @@ int Menu::newGame(const int& level)
 
 	if (t == 0)
 	{
-		int k = drawSubMenu(lvl); 
+		int k = subMenu(lvl); 
 	}
 }
 
@@ -117,33 +119,19 @@ int Menu::loadLevel(const sf::String& name)
 	return 0;
 }
 
-Button::Button() {}
-
-Button::~Button() {}
-
-Button::Button(const std::string& t, const sf::Vector2f& pos, const sf::Color& color, const int& size)
+int Menu::subMenu(const int& level)
 {
-	font.loadFromFile("ARCADECLASSIC.TTF");
-	text.setFont(font); 
-	text.setPosition(pos); 
-	text.setFillColor(color);
-	text.setString(t);
-}
+	window->clear();
+	// RECHECK: load background
 
-void Button::render(sf::RenderTarget& target)
-{
-	target.draw(text);
-}
+	/*0: resume
+	1: save game
+	2: music
+	3: exit*/
+	std::string menu[3] = { "RESUME" , "SAVE GAME", "EXIT" }; //RECHECK" add music -> resize : 4 
+	
+	sf::Text text[2]; 
+	std::vector<Button> menuButton; 
+	sf::Font font; 
 
-bool Button::mouseClick(sf::RenderWindow& window)
-{
-	float x = sf::Mouse::getPosition(window).x; 
-	float y = sf::Mouse::getPosition(window).y; 
-
-	sf::Vector2f mousePos(x, y); 
-	if (text.getGlobalBounds().contains(mousePos)) {
-		text.setFillColor(sf::Color::Red); 
-		return 1; 
-	}
-	else return 0; 
 }
