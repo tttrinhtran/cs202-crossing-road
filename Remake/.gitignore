@@ -1,0 +1,46 @@
+.vs
+Debug
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Fortran module files
+*.mod
+*.smod
+
+# Executables
+*.exe
+*.out
+*.app
+
+### VSCode ###
+.vscode/
+
+### CodeBlocks ###
+# specific to CodeBlocks IDE
+*.layout
+*.layout.save
+*.depend
+# generated directories
+bin/
+obj/
+
+### main ###
+# generated files
+x64/
+cs202-road-crossing-game/x64/
+Release/
+installer
+*.lastbuildstate
+*.tlog
+*.log
+*.vcxproj
