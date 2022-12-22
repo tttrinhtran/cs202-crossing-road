@@ -31,7 +31,7 @@ void TrafficLight::update(bool move)
 		shape.setFillColor(sf::Color::Green); 
 }
 
-void TrafficLight::render(sf::RenderTarget& target)
+void TrafficLight::render(sf::RenderWindow& window)
 {
-	target.draw(shape);
+	window.draw(shape);
 }

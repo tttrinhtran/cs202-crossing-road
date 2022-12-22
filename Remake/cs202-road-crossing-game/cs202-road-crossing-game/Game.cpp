@@ -13,6 +13,7 @@ void Game::initVariables()
 
 Game::Game()
 {
+	level = 1; 
 	initVariables();
 }
 
@@ -64,7 +65,6 @@ int Game::runGame(sf::RenderWindow& window)
 {
 	while (window.isOpen())
 	{
-		
 		if (!win)
 			update(window); 
 		render(window);
@@ -82,7 +82,7 @@ int Game::runGame(sf::RenderWindow& window)
 					break; 
 				}
 			}
-			window.clear(sf::Color::Black); // RECHECK 
+			//window.clear(sf::Color::Black); // RECHECK 
 			player->reset(); 
 			return runGame(window); 
 		}
@@ -115,7 +115,7 @@ int Game::getLevel()
 
 bool Game::isWin()
 {
-	if (player->getshape().getPosition().y == 10)
+	if (player->getshape().getGlobalBounds().top == 0)
 	{
 		++level;
 		win = true; 
@@ -131,7 +131,7 @@ void Game::drawNextLevel(sf::RenderWindow& window)
 	font.loadFromFile("ARCADECLASSIC.TTF"); 
 	text.setFont(font); 
 	text.setString("NEXT LEVEL : " + std::to_string(level)); 
-	text.setFillColor(sf::Color::Black); 
+	text.setFillColor(sf::Color::Blue); 
 	text.setCharacterSize(24); 
 	text.setPosition(300, 300); 
 	text.setStyle(sf::Text::Bold); 

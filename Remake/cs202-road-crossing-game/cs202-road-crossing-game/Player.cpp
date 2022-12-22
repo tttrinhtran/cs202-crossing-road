@@ -2,10 +2,10 @@
 
 void Player::initVariables()
 {
-	texture.loadFromFile("pic/santa.png");
-	shape.setTexture(&texture); 
-	shape.setScale(0.4f, 0.4f); 
+	shape.setSize(sf::Vector2f(100.0f, 100.0f));
 	shape.setPosition(sf::Vector2f(600, 600));
+	texture.loadFromFile("pic/santa.png");
+	shape.setTexture(&texture);
 	texture.setSmooth(true);
 }
 
@@ -14,16 +14,16 @@ Player::Player()
 	initVariables();
 }
 
-Player::~Player(){}
+Player::~Player() {}
 
 sf::RectangleShape Player::getshape()
 {
-	return shape; 
+	return shape;
 }
 
 void Player::reset()
 {
-	shape.setPosition(600, 600); 
+	shape.setPosition(600, 600);
 }
 
 void Player::updateInput()
@@ -48,28 +48,32 @@ void Player::updateInput()
 
 void Player::update(sf::RenderWindow& window)
 {
-	updateInput(); 
-	updateWindowBoundsCollision(window);
+	if (clock.getElapsedTime() > time)
+	{
+		updateInput();
+		updateWindowBoundsCollision(window);
+		clock.restart();
+	}
 }
 
-void Player::render(sf::RenderTarget& target)
+void Player::render(sf::RenderWindow& window)
 {
-	target.draw(shape);
+	window.draw(shape);
 }
 
-void Player::updateWindowBoundsCollision(const sf::RenderTarget& target)
+void Player::updateWindowBoundsCollision(const sf::RenderWindow& window)
 {
 	// Left 
 	if (this->shape.getGlobalBounds().left <= 0.f)
 		this->shape.setPosition(0.f, this->shape.getGlobalBounds().top);
 	//Right
-	if (this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= target.getSize().x)
-		this->shape.setPosition(target.getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
+	if (this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= window.getSize().x)
+		this->shape.setPosition(window.getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
 
 	//Top
 	if (this->shape.getGlobalBounds().top <= 0.f)
 		this->shape.setPosition(this->shape.getGlobalBounds().left, 0.f);
 	//Bottom
-	if (this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= target.getSize().y)
-		this->shape.setPosition(this->shape.getGlobalBounds().left, target.getSize().y - this->shape.getGlobalBounds().height);
+	if (this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= window.getSize().y)
+		this->shape.setPosition(this->shape.getGlobalBounds().left, window.getSize().y - this->shape.getGlobalBounds().height);
 }

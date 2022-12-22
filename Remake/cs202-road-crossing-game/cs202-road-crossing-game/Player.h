@@ -5,10 +5,11 @@ class Player
 private: 
 	sf::RectangleShape shape;
 	sf::Texture texture; 
-	sf::Time time = sf::seconds(0.005f); 
+	sf::Time time = sf::seconds(0.05f); 
 	sf::Clock clock;
-	const float movementSpeed = 10.f; 
 
+
+	const float movementSpeed = 50.f; 
 	void initVariables(); 
 public: 
 	Player(); 
@@ -17,8 +18,8 @@ public:
 	sf::RectangleShape getshape(); 
 	void reset(); 
 	void updateInput(); 
-	void updateWindowBoundsCollision(const sf::RenderTarget& target); 
+	void updateWindowBoundsCollision(const sf::RenderWindow& window); 
 	void update(sf::RenderWindow& window);
-	void render(sf::RenderTarget& target); 
+	void render(sf::RenderWindow& window); 
 };
 

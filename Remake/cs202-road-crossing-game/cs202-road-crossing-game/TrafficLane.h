@@ -25,11 +25,11 @@ public:
 
 	bool canMove(int lane); 
 	void update(sf::RenderWindow& window, int level); 
-	void spawnEnemy(); // 
+	void spawnEnemy(sf::RenderWindow& window);
 
-	void renderObstacle(sf::RenderTarget& target); 
-	void renderTrafficLight(sf::RenderTarget& target); 
-	void render(sf::RenderTarget& target);
+	void renderObstacle(sf::RenderWindow& window);
+	void renderTrafficLight(sf::RenderWindow& window); 
+	void render(sf::RenderWindow& window);
 	bool Collision(sf::FloatRect coll); 
 	void resetTimer(); 
 };

@@ -14,6 +14,6 @@ public:
 	
 	void setPosition(float x, float y); 
 	void update(bool canMove); 
-	void render(sf::RenderTarget& target); 
+	void render(sf::RenderWindow& window); 
 };
 
