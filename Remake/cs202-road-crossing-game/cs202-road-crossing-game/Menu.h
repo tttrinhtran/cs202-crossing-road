@@ -15,7 +15,8 @@ private:
 	sf::Event* event;
 	sf::Texture bgTexture; 
 	sf::Sprite bgSprite; 
-	//sf::Music sound; 
+	sf::Music sound; 
+	bool bgMusic; 
 
 	Game* game = nullptr; 
 
@@ -23,17 +24,24 @@ private:
 	void initWindow(); 
 	void initBackground(); 
 public: 
-	Menu(); 
-	virtual ~Menu(); 
+	Menu();
+	virtual ~Menu();
 
-	const bool isRunning() const; 
-	void pollEvents(); 
-
+	void pollEvents();
+	void play_sound();
+	std::string setSound();
+	void renderBackground(sf::RenderWindow& window);
 	//Menu list of choice
 	int renderMain();
-	int newGame(const int& level = 1); 
-	int saveGame(const int& level); 
-	int loadLevel(const sf::String& name); 
+	int newGame(const int& level = 1);
+	int saveGame(const int& level);
+	int loadLevel(const sf::String& name);
 	int subMenu(const int& level);
+	int loseMenu();
+	int loadGame();
+	int rank();
+	template<class T> void swap(T& a, T& b);
+	int exitGame();
+	int instruction();
 };
 

@@ -1,24 +1,23 @@
 #include "Menu.h"
 #include "Button.h"
-
 void Menu::initVariables()
 {
-	event = new sf::Event; 
-	game = new Game; 
+	event = new sf::Event;
+	game = new Game;
 }
 
 void Menu::initWindow()
 {
-	videoMode.width = 1280; 
-	videoMode.height = 720; 
-	window = new sf::RenderWindow(videoMode, "Crossing Road", sf::Style::Close | sf::Style::Titlebar); 
+	videoMode.width = 1280;
+	videoMode.height = 720;
+	window = new sf::RenderWindow(videoMode, "Crossing Road", sf::Style::Close | sf::Style::Titlebar);
 	window->setFramerateLimit(60);
 }
 
 void Menu::initBackground()
 {
-	bgTexture.loadFromFile("pic/background.png"); 
-	bgSprite.setTexture(bgTexture); 
+	bgTexture.loadFromFile("pic/background.png");
+	bgSprite.setTexture(bgTexture);
 }
 
 Menu::Menu()
@@ -26,13 +25,19 @@ Menu::Menu()
 	initVariables();
 	initWindow();
 	initBackground();
+
+	bgMusic = true;
+	sound.openFromFile("sound/music.ogg");
+	sound.setPlayingOffset(sf::seconds(15.f));
+	sound.setVolume(24);
+	sound.setLoop(true);
+	play_sound();
 }
 
-Menu::~Menu() {}
-
-const bool Menu::isRunning() const
-{
-	return window->isOpen();
+Menu::~Menu() {
+	delete window;
+	delete event;
+	delete game;
 }
 
 void Menu::pollEvents()
@@ -41,38 +46,82 @@ void Menu::pollEvents()
 	{
 		switch (event->type)
 		{
-			case sf::Event::Closed: 
-				window->close(); 
-				break; 
-			case sf::Event::KeyPressed: 
-				if (event->key.code == sf::Keyboard::Escape)
-					window->close(); 
-				break; 
-			default:
-				break;
+		case sf::Event::Closed:
+			window->close();
+			break;
+		case sf::Event::KeyPressed:
+			if (event->key.code == sf::Keyboard::Escape)
+				window->close();
+			break;
+		default:
+			break;
 		}
 	}
 }
 
+void Menu::play_sound()
+{
+	if (bgMusic)
+		sound.play();
+	else sound.pause();
+}
+
+void Menu::renderBackground(sf::RenderWindow& window) // redundant
+{
+	window.draw(bgSprite);
+}
+
+std::string Menu::setSound()
+{
+	sf::sleep(sf::seconds(0.175));
+	bgMusic = !bgMusic;
+	play_sound();
+	if (bgMusic)
+	{
+		std::cout << "Turning sound on!\n";
+		return "Music: ON";
+	}
+	std::cout << "Turning sound off!\n";
+	return "Music: OFF";
+}
+
 int Menu::renderMain()
 {
-	window->clear(); 
+	std::cout << "renderMain\n" << '\n';
+	window->clear();
 
-	std::string menu[4] = { "NEW GAME", "LOAD GAME", "INSTRUCTIONS" , "EXIT" }; 
-	std::vector <Button> button; 
-	for (int i = 0; i < 4; i++)
+	std::string menu[5] = { "NEW GAME", "LOAD GAME","RANKING", "MUSIC: ON" , "EXIT" };
+	if (!bgMusic) menu[3] = "MUSIC: OFF";
+	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
+	std::vector <Button> button;
+
+	for (int i = 0; i < 5; i++)
 	{
-		Button a(menu[i], { 200, 300 + i * 50 }, sf::Color::Black, 24); 
-		button.push_back(a); 
+		Button a(menu[i], sf::Vector2f((float)200, (float)(300 + i * 50)), sf::Color::Black, 24, sf::Vector2f((float)200, (float)(300 + i * 50)));
+		a.setFont(font);
+		a.setPosition(sf::Vector2f((float)200, (float)(300 + i * 50)));
+		button.push_back(a);
 	}
-	sf::Clock clock; 
-	sf::Time time = sf::seconds(0.10f); 
-	clock.restart().asSeconds(); 
+
+	std::cout << "size: " << button.size() << std::endl;
+	sf::Clock clock;
+	sf::Time time = sf::seconds(0.10f);
+	clock.restart().asSeconds();
 
 	while (window->isOpen())
 	{
-		pollEvents(); 
-		for (int i = 0; i < 4; i++) button[i].render(*window);
+		pollEvents();
+
+		//renderBackground(*window);
+		window->draw(bgSprite);
+		for (int i = 0; i < 5; i++) {
+			//getShape
+			button[i].render(*window);
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			button[i].mouseClick(*window);
+		}
 
 		if (clock.getElapsedTime() >= time)
 		{
@@ -81,57 +130,648 @@ int Menu::renderMain()
 				for (int i = 0; i < 5; i++) {
 					if (button[i].mouseClick(*window))
 					{
-						return i; 
+						if (i == 3)
+							button[i].setString(setSound());
+						else
+							return i;
 					}
 				}
 			}
 			clock.restart().asSeconds();
 		}
-		renderSprite(*window, bgSprite);
+
 		window->display();
+		window->clear();
 	}
 	return 4; // RECHECK
 }
 
 int Menu::newGame(const int& level)
 {
-	game->setLevel(level); 
+	std::cout << "newGame\n";
+	game->setLevel(level);
 
-	int t = game->runGame(*window), lvl = game->getLevel(); 
-	delete game; 
-	game = new Game; 
+	int t = game->runGame(*window), lvl = game->getLevel();
+	delete game;
+	game = new Game;
 	window->clear(sf::Color::Black); // RECHECK 
-	window->display(); 
+
+	sf::Texture texture; texture.loadFromFile("pic/background.png");
+	sf::Sprite sprite; sprite.setTexture(texture);
+	window->draw(sprite);
+	window->display();
 
 	if (t == 0)
 	{
-		int k = subMenu(lvl); 
+		int k = subMenu(lvl);
+		if (k == 0)
+			return newGame(lvl);
+		else if (k == 1)
+			return newGame(saveGame(lvl));
+		else if (k == 2)
+			return newGame(loadGame());
+		else if (k == 4)
+		{
+			switch (renderMain())
+			{
+			case 0:
+				return newGame();
+				break;
+			case 1:
+				return loadGame();
+				break;
+			case 2:
+				return rank(); //rank
+				break;
+			case 3:
+				return exitGame();
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	else if (t == -1)
+	{
+		int k = loseMenu();
+		if (k == 0)
+			return newGame();
+		else if (k == 1)
+		{
+			switch (renderMain())
+			{
+			case 0:
+				return newGame();
+				break;
+			case 1:
+				return loadGame();
+				break;
+			case 2:
+				return rank(); //rank
+				break;
+			case 3:
+				return exitGame();
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }
 
-int Menu::saveGame(const int& level)
+int Menu::saveGame(const int& Level)
 {
-	return 0;
+	std::cout << "saveGame\n";
+	window->clear();
+
+	sf::Texture texture;
+	texture.loadFromFile("pic/santa.png");
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+
+
+	std::string name = "";
+	sf::String sentence;
+	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
+	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black); text.setPosition(sf::Vector2f(150, 150));
+
+	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Black, 24, sf::Vector2f(350, 50));
+	instruction.setFont(font);
+	instruction.setPosition(sf::Vector2f(350, 50));
+	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Blue, 24, sf::Vector2f(125, 140));
+	textBox.setFont(font);
+	textBox.setPosition(sf::Vector2f(125, 140));
+	Button enter("SAVE", sf::Vector2f(840, 140), sf::Color::Black, 24, sf::Vector2f(840, 140));
+	enter.setFont(font);
+	enter.setPosition(sf::Vector2f(840, 140));
+
+
+	while (window->isOpen() && name.length() == 0)
+	{
+		sf::Event event;
+		while (window->pollEvent(event))
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				if (enter.mouseClick(*window))
+				{
+					name = sentence.toAnsiString();
+					break;
+				}
+			}
+			if (event.type == sf::Event::TextEntered)
+			{
+				if (event.text.unicode >= 32 && event.text.unicode <= 126)
+					sentence += (char)event.text.unicode;
+				else if (event.text.unicode == 8 && sentence.getSize() > 0) // backspace
+					sentence.erase(sentence.getSize() - 1);
+				text.setString(sentence);
+			}
+		}
+
+		window->draw(sprite);
+		instruction.render(*window);
+		textBox.render(*window);
+		enter.render(*window);
+
+		/*window->draw(instruction.getShape());
+		window->draw(instruction.getText());
+		window->draw(textBox.getShape());
+		window->draw(textBox.getText());
+		window->draw(enter.getShape());
+		window->draw(enter.getText()); */
+
+		enter.mouseClick(*window);
+		window->draw(text);
+		window->display();
+		window->clear();
+	}
+
+
+	std::ofstream fout;
+	std::ifstream fin;
+
+	fin.open("loadGame.txt", std::ios::in);
+	if (!fin.is_open())
+		std::cout << "Couldn't open load file" << std::endl;
+	else
+	{
+		std::vector<std::pair<std::string, int>> list;
+		int level;
+		std::string info;
+		std::string acc;
+		std::string lvl;
+		bool check = false;
+
+		while (fin >> info)
+		{
+			for (int i = 0; i < info.length(); i++)
+			{
+				if (info[i] != ',')
+					acc += info[i];
+				else
+				{
+					while (i + 1 < info.length())
+						lvl += info[++i];
+					level = stoi(lvl);
+					break;
+				}
+			}
+
+			if (acc == name) {
+				check = true;
+				level = Level;
+			}
+
+			list.push_back(make_pair(acc, level));
+
+			acc.clear();
+			lvl.clear();
+			info.clear();
+		}
+		fin.close();
+
+		if (check)
+			fout.open("loadGame.txt");
+		else
+			fout.open("loadGame.txt", std::ios::app);
+
+		if (!fout.is_open())
+		{
+			std::cout << "Could not open laod file\n";
+		}
+		else
+		{
+			if (check)
+			{
+				/*for (int i = 0; i < list.size(); i++)
+				{
+					fout << list[i].first << ',' << list[i].second << '\n';
+				}*/
+
+				for (auto i = list.begin(); i != list.end(); i++)
+					fout << i->first << ',' << i->second << '\n';
+			}
+			else
+				fout << name << ',' << Level << '\n';
+			fout.close();
+		}
+
+		std::cout << "Save successfully\n";
+		return Level;
+	}
+	return 1;
 }
 
 int Menu::loadLevel(const sf::String& name)
 {
+	std::ifstream fin;
+	std::ofstream fout;
+	std::string account;
+	std::string info;
+	std::string lvl;
+	int level = 1;
+
+	fin.open("loadGame.txt");
+	if (!fin.is_open())
+	{
+		std::cout << "Couldn't open file\m";
+		//RECHECK : draw error background
+	}
+	else
+	{
+		while (fin >> info)
+		{
+			for (int i = 0; i < info.length(); i++)
+			{
+				if (info[i] != ',')
+					account += info[i];
+				else if (info[i] == ',' && account == name)
+				{
+					while (i + 1 < info.length())
+						lvl += info[++i];
+					level = stoi(lvl);
+					fin.close();
+					std::cout << "Loaded account " << "\ " << account << "\ " << "successfully. \n";
+					return level;
+				}
+			}
+			account.clear();
+		}
+		fin.close();
+	}
+
+	fout.open("loadGame.txt", std::ios::app);
+	fout << "autosave," << 1 << std::endl;
+	fout.close();
+	std::cout << "Load accout does not exist| Loading autosave account\n";
+
+	return level;
+}
+
+int Menu::subMenu(const int& clevel)
+{
+	window->clear();
+	//RECHECK: load background 
+
+
+	/*0 : resume
+	1 : save game
+	2 : music
+	3 : exit */
+	std::string menu[5] = { "RESUME", "SAVE GAME", "LOAD GAME", "MUSIC: ON", "EXIT" }; // RECHECK :  add music -> resize = 4
+
+	// RECHECK: add music : menu[2] = music (on/off) 
+	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
+	std::vector <Button> menuButton;
+	sf::Texture texture;
+	sf::Sprite sprite;
+	texture.loadFromFile("pic/santa.png");
+	sprite.setTexture(texture);
+	sprite.setPosition(sf::Vector2f(300, 300));
+	std::string curLevel = "CURRENT LEVEL: " + std::to_string(clevel);
+
+
+	Button level(curLevel, sf::Vector2f(200, 200), sf::Color::Red, 24, sf::Vector2f(200, 200)); //RECHECK 
+	level.setFont(font);
+	level.setPosition(sf::Vector2f(200, 200));
+
+	sf::Clock clock;
+	sf::Time time = sf::seconds(0.10f);
+	clock.restart().asSeconds();
+
+	for (int i = 0; i < 5; i++) // RECHECK : add music -> i < 4
+	{
+		sf::Vector2f pos(window->getSize().x / 2 + 110, i * 65 + 220);
+		Button a(menu[i], pos, sf::Color::Black, 24, pos);
+		a.setFont(font);
+		a.setPosition(pos);
+		menuButton.push_back(a);
+	}
+
+	while (window->isOpen())
+	{
+		pollEvents();
+		for (int i = 0; i < 5; i++)
+		{
+			/*window->draw(menuButton[i].getShape());
+			window->draw(menuButton[i].getText());*/
+			menuButton[i].render(*window);
+		}
+		/*window->draw(level.getShape());
+		window->draw(level.getText()); */
+		level.render(*window);
+		window->draw(sprite);
+		window->display();
+
+		if (clock.getElapsedTime() >= time)
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					if (menuButton[i].mouseClick(*window))
+					{
+						if (i == 3)
+							menuButton[i].setString(setSound());
+						else
+							return i;
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < 5; i++)
+			menuButton[i].mouseClick(*window);
+		window->clear();
+	}
+	return 1;
+}
+
+int Menu::loseMenu()
+{
+	std::cout << "loseMenu\n";
+	window->clear();
+	std::string menu[2] = { "TRY AGAIN", "QUIT" };
+	sf::Text crash;
+	std::vector <Button> menuButton;
+	sf::Font font;
+
+	font.loadFromFile("ARCADECLASSIC.TTF");
+
+	crash.setPosition(sf::Vector2f(140, 190));
+	crash.setFont(font);
+	crash.setString("CRASHED");
+	crash.setCharacterSize(165);
+	crash.setFillColor(sf::Color::Red);
+
+	for (int i = 0; i < 2; i++)
+	{
+		sf::Vector2f pos(window->getSize().x / 2 + 160, i * 65 + 250);
+		Button a(menu[i], pos, sf::Color::Black, 24, pos);
+		a.setFont(font);
+		a.setPosition(pos);
+		menuButton.push_back(a);
+	}
+
+	while (window->isOpen())
+	{
+		pollEvents();
+		for (int i = 0; i < 2; i++)
+		{
+			/*window->draw(menuButton[i].getShape());
+			window->draw(menuButton[i].getText());*/
+			menuButton[i].render(*window);
+		}
+
+		window->draw(crash);
+		window->display();
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				if (menuButton[i].mouseClick(*window))
+					return i;
+			}
+		}
+
+		for (int i = 0; i < 2; i++)
+			menuButton[i].mouseClick(*window);
+	}
+	return 1;
+}
+
+int Menu::loadGame()
+{
+	std::cout << "loadGame\n";
+	window->clear();
+
+	sf::Texture texture;
+	texture.loadFromFile("pic/santa.png");
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+
+	std::string name = "";
+	sf::String sentence;
+	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
+	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black);
+
+	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Black, 24, sf::Vector2f(350, 50));
+	instruction.setFont(font);
+	instruction.setPosition(sf::Vector2f(350, 50));
+	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Blue, 24, sf::Vector2f(125, 140));
+	textBox.setFont(font);
+	textBox.setPosition(sf::Vector2f(125, 140));
+	Button enter("LOAD", sf::Vector2f(840, 140), sf::Color::Black, 24, sf::Vector2f(840, 140));
+	enter.setFont(font);
+	enter.setPosition(sf::Vector2f(840, 140));
+
+
+	while (window->isOpen() && name.length() == 0)
+	{
+		sf::Event event;
+		while (window->pollEvent(event))
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				if (enter.mouseClick(*window))
+				{
+					name = sentence.toAnsiString();
+					break;
+				}
+			}
+			if (event.type == sf::Event::TextEntered)
+			{
+				if (event.text.unicode >= 32 && event.text.unicode <= 126)
+					sentence += (char)event.text.unicode;
+				else if (event.text.unicode == 8 && sentence.getSize() > 0)
+					sentence.erase(sentence.getSize() - 1);
+				text.setString(sentence);
+			}
+
+			window->draw(sprite);
+			instruction.render(*window);
+			textBox.render(*window);
+			enter.render(*window);
+
+			/*window->draw(instruction.getShape());
+			window->draw(instruction.getText());
+			window->draw(textBox.getShape());
+			window->draw(textBox.getText());
+			window->draw(enter.getShape());
+			window->draw(enter.getText());*/
+
+			enter.mouseClick(*window);
+
+			window->draw(text);
+			window->display();
+			window->clear();
+		}
+	}
+	return newGame(loadLevel(name));
+}
+
+int Menu::exitGame()
+{
+	std::cout << "exitGame\n";
+	window->close();
+	this->~Menu();
+	exit(0);
 	return 0;
 }
 
-int Menu::subMenu(const int& level)
+int Menu::instruction()
 {
 	window->clear();
-	// RECHECK: load background
-
-	/*0: resume
-	1: save game
-	2: music
-	3: exit*/
-	std::string menu[3] = { "RESUME" , "SAVE GAME", "EXIT" }; //RECHECK" add music -> resize : 4 
-	
-	sf::Text text[2]; 
-	std::vector<Button> menuButton; 
-	sf::Font font; 
-
+	sf::Texture texture;
+	texture.loadFromFile("pic/shiba.png");
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sf::Event event;
+	while (window->isOpen())
+	{
+		pollEvents();
+		window->draw(sprite);
+		window->display();
+	}
+	return 2;
 }
+
+int Menu::rank()
+{
+	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false && window->isOpen())
+	{
+		window->clear();
+		std::vector<std::string> info;
+		std::vector<int> level;
+		std::vector<std::pair<Button, Button>> box;
+		std::vector<Button> num;
+
+		Button title("TOP 5 BEST PLAYERS:", sf::Vector2f(300.0f, 300.0f), sf::Color::Blue, 24, sf::Vector2f(300.0f, 300.0f));
+		sf::Text esc;
+		sf::Font font;
+		esc.setString("Press Enter to return to Menu");
+		esc.setFillColor(sf::Color::Blue);
+		esc.setCharacterSize(40);
+		esc.setPosition(sf::Vector2f(300.0f, 300.0f));
+		font.loadFromFile("ARCADECLASSIC.TTF");
+		title.setFont(font);
+		title.setPosition(sf::Vector2f(350.0f, 250.0f));
+		title.render(*window);
+
+		window->draw(esc);
+
+
+		std::ifstream fin;
+		fin.open("loadGame.txt", std::ios::in);
+
+		if (!fin.is_open())
+			window->close(); //RECHECK 
+		else
+		{
+			std::string infoLine;
+			std::string acc;
+			std::string levelStr;
+			int l;
+			while (fin >> infoLine)
+			{
+				for (int i = 0; i < infoLine.length(); i++)
+				{
+					if (infoLine[i] != ',')
+						acc += infoLine[i];
+					else
+					{
+						while (i + 1 < infoLine.length())
+							levelStr += infoLine[i];
+
+						l = stoi(levelStr);
+						break;
+					}
+				}
+
+				level.push_back(l);
+				info.push_back(acc);
+
+				acc.clear();
+				infoLine.clear();
+				levelStr.clear();
+			}
+			fin.close();
+		}
+
+		if (level.size())
+		{
+			for (int i = 0; i < level.size() - 1; i++)
+			{
+				for (int j = i + 1; j < level.size(); j++)
+				{
+					if (level.at(j) > level.at(i))
+					{
+						swap(level.at(i), level.at(j));
+						swap(info.at(i), info.at(j));
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < level.size(); i++)
+		{
+			if (i < 5)
+			{
+				Button context(info[i], sf::Vector2f(200, 250), sf::Color::Blue, 24, sf::Vector2f(200, 250));
+				Button lvl(std::to_string(level[i]), sf::Vector2f(200, 350), sf::Color::Blue, 24, sf::Vector2f(200, 350));
+				Button n(std::to_string(i + 1), sf::Vector2f(200, 450), sf::Color::Blue, 24, sf::Vector2f(200, 450));
+
+				context.setFont(font);
+				lvl.setFont(font);
+				n.setFont(font);
+
+				context.setPosition(sf::Vector2f(200, 250));
+				lvl.setPosition(sf::Vector2f(200, 350));
+				n.setPosition(sf::Vector2f(200, 450));
+
+				box.push_back(std::make_pair(context, lvl));
+				num.push_back(n);
+			}
+			else break;
+		}
+
+		for (int i = 0; i < box.size(); i++)
+		{
+			box[i].first.render(*window);
+			box[i].second.render(*window);
+			num[i].render(*window);
+		}
+		window->display();
+	}
+
+	switch (renderMain())
+	{
+	case 0:
+		return newGame();
+		break;
+	case 1:
+		return loadGame();
+		break;
+	case 2:
+		return rank();
+		break;
+	case 3:
+		return exitGame();
+		break;
+	default:
+		break;
+	}
+}
+
+template <class T>
+inline void Menu::swap(T& a, T& b)
+{
+	T tmp;
+	tmp = a;
+	a = b;
+	b = tmp;
+}
+
+

@@ -25,7 +25,7 @@ sf::RectangleShape& Button::getShape()
 	return shape; 
 }
 
-void Button::setPosition(sf::Vector2f& pos)
+void Button::setPosition(sf::Vector2f pos)
 {
 	text.setPosition(pos); 
 }

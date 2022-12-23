@@ -15,7 +15,7 @@ public:
 
 	sf::Text& getText();
 	sf::RectangleShape& getShape();
-	void setPosition(sf::Vector2f& pos);
+	void setPosition(sf::Vector2f pos);
 	void setString(const std::string& t); 
 	void setFont(const sf::Font& font); 
 	void render(sf::RenderWindow& window);
