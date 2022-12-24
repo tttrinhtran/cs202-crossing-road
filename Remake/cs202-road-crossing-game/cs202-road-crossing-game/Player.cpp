@@ -2,6 +2,8 @@
 
 void Player::initVariables()
 {
+    texturebg.loadFromFile("pic/levelbackground.png");
+    bg.setTexture(texturebg);
 	shape.setSize(sf::Vector2f(100.0f, 100.0f));
 	shape.setPosition(sf::Vector2f(600, 600));
 	texture.loadFromFile("pic/santa.png");
@@ -58,6 +60,7 @@ void Player::update(sf::RenderWindow& window)
 
 void Player::render(sf::RenderWindow& window)
 {
+    window.draw(bg);
 	window.draw(shape);
 }
 
