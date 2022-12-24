@@ -10,8 +10,8 @@ Button::Button(const std::string& t, const sf::Vector2f& pos, const sf::Color& c
 	text.setCharacterSize(24); 
 	text.setFillColor(color);
 
-	shape.setFillColor(sf::Color::Blue);
-	shape.setSize(sf::Vector2f(50.0f, 50.0f));
+	shape.setFillColor(sf::Color::Transparent);
+	shape.setSize(sf::Vector2f(100.0f, 50.0f));
 	shape.setPosition(shapePos); 
 }
 
