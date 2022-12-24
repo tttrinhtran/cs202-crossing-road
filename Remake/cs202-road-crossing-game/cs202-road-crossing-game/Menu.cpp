@@ -97,9 +97,9 @@ int Menu::renderMain()
 
 	for (int i = 0; i < 5; i++)
 	{
-		Button a(menu[i], sf::Vector2f((float)200, (float)(300 + i * 50)), sf::Color::Black, 24, sf::Vector2f((float)200, (float)(300 + i * 50)));
+		Button a(menu[i], sf::Vector2f((float)600, (float)(250 + i * 50)), sf::Color::White, 24, sf::Vector2f((float)600, (float)(250 + i * 50)));
 		a.setFont(font);
-		a.setPosition(sf::Vector2f((float)200, (float)(300 + i * 50)));
+		a.setPosition(sf::Vector2f((float)600, (float)(250 + i * 50)));
 		button.push_back(a);
 	}
 
