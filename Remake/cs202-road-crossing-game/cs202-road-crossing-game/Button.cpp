@@ -7,7 +7,7 @@ Button::~Button() {}
 Button::Button(const std::string& t, const sf::Vector2f& pos, const sf::Color& color, const int& size, const sf::Vector2f& shapePos)
 {	
 	text.setString(t);
-	text.setCharacterSize(24); 
+	text.setCharacterSize(40); 
 	text.setFillColor(color);
 
 	shape.setFillColor(sf::Color::Transparent);

@@ -92,7 +92,7 @@ int Menu::renderMain()
 
 	std::string menu[5] = { "NEW GAME", "LOAD GAME","RANKING", "MUSIC: ON" , "EXIT" };
 	if (!bgMusic) menu[3] = "MUSIC: OFF";
-	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
+	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
 	std::vector <Button> button;
 
 	for (int i = 0; i < 5; i++)
@@ -141,7 +141,7 @@ int Menu::renderMain()
 		}
 
 		window->display();
-		window->clear();
+		//window->clear();
 	}
 	return 4; // RECHECK
 }
@@ -225,23 +225,23 @@ int Menu::saveGame(const int& Level)
 	window->clear();
 
 	sf::Texture texture;
-	texture.loadFromFile("pic/santa.png");
+	texture.loadFromFile("pic/background.png");
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
 
 
 	std::string name = "";
 	sf::String sentence;
-	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
+	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
 	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black); text.setPosition(sf::Vector2f(150, 150));
 
-	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Black, 24, sf::Vector2f(350, 50));
+	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
 	instruction.setFont(font);
 	instruction.setPosition(sf::Vector2f(350, 50));
-	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Blue, 24, sf::Vector2f(125, 140));
+	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Red, 40, sf::Vector2f(125, 140));
 	textBox.setFont(font);
 	textBox.setPosition(sf::Vector2f(125, 140));
-	Button enter("SAVE", sf::Vector2f(840, 140), sf::Color::Black, 24, sf::Vector2f(840, 140));
+	Button enter("SAVE", sf::Vector2f(840, 140), sf::Color::Red, 40, sf::Vector2f(840, 140));
 	enter.setFont(font);
 	enter.setPosition(sf::Vector2f(840, 140));
 
@@ -273,13 +273,6 @@ int Menu::saveGame(const int& Level)
 		instruction.render(*window);
 		textBox.render(*window);
 		enter.render(*window);
-
-		/*window->draw(instruction.getShape());
-		window->draw(instruction.getText());
-		window->draw(textBox.getShape());
-		window->draw(textBox.getText());
-		window->draw(enter.getShape());
-		window->draw(enter.getText()); */
 
 		enter.mouseClick(*window);
 		window->draw(text);
@@ -422,17 +415,17 @@ int Menu::subMenu(const int& clevel)
 	std::string menu[5] = { "RESUME", "SAVE GAME", "LOAD GAME", "MUSIC: ON", "EXIT" }; // RECHECK :  add music -> resize = 4
 
 	// RECHECK: add music : menu[2] = music (on/off) 
-	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
+	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
 	std::vector <Button> menuButton;
 	sf::Texture texture;
 	sf::Sprite sprite;
-	texture.loadFromFile("pic/santa.png");
+	texture.loadFromFile("pic/background.png");
 	sprite.setTexture(texture);
-	sprite.setPosition(sf::Vector2f(300, 300));
+	//sprite.setPosition(sf::Vector2f(300, 300));
 	std::string curLevel = "CURRENT LEVEL: " + std::to_string(clevel);
 
 
-	Button level(curLevel, sf::Vector2f(200, 200), sf::Color::Red, 24, sf::Vector2f(200, 200)); //RECHECK 
+	Button level(curLevel, sf::Vector2f(200, 200), sf::Color::Red, 40, sf::Vector2f(200, 200)); //RECHECK 
 	level.setFont(font);
 	level.setPosition(sf::Vector2f(200, 200));
 
@@ -443,7 +436,7 @@ int Menu::subMenu(const int& clevel)
 	for (int i = 0; i < 5; i++) // RECHECK : add music -> i < 4
 	{
 		sf::Vector2f pos(window->getSize().x / 2 + 110, i * 65 + 220);
-		Button a(menu[i], pos, sf::Color::Black, 24, pos);
+		Button a(menu[i], pos, sf::Color::Red, 40, pos);
 		a.setFont(font);
 		a.setPosition(pos);
 		menuButton.push_back(a);
@@ -452,16 +445,12 @@ int Menu::subMenu(const int& clevel)
 	while (window->isOpen())
 	{
 		pollEvents();
+		window->draw(sprite);
 		for (int i = 0; i < 5; i++)
 		{
-			/*window->draw(menuButton[i].getShape());
-			window->draw(menuButton[i].getText());*/
 			menuButton[i].render(*window);
 		}
-		/*window->draw(level.getShape());
-		window->draw(level.getText()); */
 		level.render(*window);
-		window->draw(sprite);
 		window->display();
 
 		if (clock.getElapsedTime() >= time)
@@ -496,8 +485,7 @@ int Menu::loseMenu()
 	sf::Text crash;
 	std::vector <Button> menuButton;
 	sf::Font font;
-
-	font.loadFromFile("ARCADECLASSIC.TTF");
+	font.loadFromFile("Sugar Snow.TTF");
 
 	crash.setPosition(sf::Vector2f(140, 190));
 	crash.setFont(font);
@@ -523,7 +511,6 @@ int Menu::loseMenu()
 			window->draw(menuButton[i].getText());*/
 			menuButton[i].render(*window);
 		}
-
 		window->draw(crash);
 		window->display();
 
@@ -548,22 +535,23 @@ int Menu::loadGame()
 	window->clear();
 
 	sf::Texture texture;
-	texture.loadFromFile("pic/santa.png");
+	texture.loadFromFile("pic/background.png");
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
 
 	std::string name = "";
 	sf::String sentence;
-	sf::Font font; font.loadFromFile("ARCADECLASSIC.TTF");
-	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black);
+	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
+	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black); 
+	text.setPosition(sf::Vector2f(350, 140)); 
 
-	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Black, 24, sf::Vector2f(350, 50));
+	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
 	instruction.setFont(font);
 	instruction.setPosition(sf::Vector2f(350, 50));
-	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Blue, 24, sf::Vector2f(125, 140));
+	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Red, 40, sf::Vector2f(125, 140));
 	textBox.setFont(font);
 	textBox.setPosition(sf::Vector2f(125, 140));
-	Button enter("LOAD", sf::Vector2f(840, 140), sf::Color::Black, 24, sf::Vector2f(840, 140));
+	Button enter("LOAD", sf::Vector2f(840, 140), sf::Color::Red, 40, sf::Vector2f(840, 140));
 	enter.setFont(font);
 	enter.setPosition(sf::Vector2f(840, 140));
 
@@ -595,12 +583,6 @@ int Menu::loadGame()
 			textBox.render(*window);
 			enter.render(*window);
 
-			/*window->draw(instruction.getShape());
-			window->draw(instruction.getText());
-			window->draw(textBox.getShape());
-			window->draw(textBox.getText());
-			window->draw(enter.getShape());
-			window->draw(enter.getText());*/
 
 			enter.mouseClick(*window);
 
@@ -655,7 +637,7 @@ int Menu::rank()
 		esc.setFillColor(sf::Color::Blue);
 		esc.setCharacterSize(40);
 		esc.setPosition(sf::Vector2f(300.0f, 300.0f));
-		font.loadFromFile("ARCADECLASSIC.TTF");
+		font.loadFromFile("Sugar Snow.TTF");
 		title.setFont(font);
 		title.setPosition(sf::Vector2f(350.0f, 250.0f));
 		title.render(*window);

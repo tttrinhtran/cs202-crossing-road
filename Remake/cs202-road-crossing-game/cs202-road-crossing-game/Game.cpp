@@ -128,11 +128,11 @@ void Game::drawNextLevel(sf::RenderWindow& window)
 {
 	sf::Text text;
 	sf::Font font; 
-	font.loadFromFile("ARCADECLASSIC.TTF"); 
+	font.loadFromFile("Sugar Snow.TTF"); 
 	text.setFont(font); 
 	text.setString("NEXT LEVEL : " + std::to_string(level)); 
-	text.setFillColor(sf::Color::Blue); 
-	text.setCharacterSize(24); 
+	text.setFillColor(sf::Color::Red); 
+	text.setCharacterSize(40); 
 	text.setPosition(300, 300); 
 	text.setStyle(sf::Text::Bold); 
 
