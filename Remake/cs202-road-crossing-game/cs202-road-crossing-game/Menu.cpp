@@ -27,7 +27,7 @@ Menu::Menu()
 	initBackground();
 
 	bgMusic = true;
-	sound.openFromFile("sound/music.ogg");
+	sound.openFromFile("sound/go.ogg");
 	sound.setPlayingOffset(sf::seconds(15.f));
 	sound.setVolume(24);
 	sound.setLoop(true);
