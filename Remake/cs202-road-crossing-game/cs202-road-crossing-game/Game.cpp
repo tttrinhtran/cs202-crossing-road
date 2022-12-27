@@ -51,13 +51,25 @@ void Game::update(sf::RenderWindow& window)
 	trafficLane->update(window, level); 
 }
 
+void Game::renderLevel(sf::RenderWindow& window)
+{
+	sf::Text text; sf::Font font; font.loadFromFile("Sugar Snow.ttf");
+	text.setFont(font);
+	std::string curLevel = "LEVEL: " + std::to_string(this->getLevel());
+	text.setString(curLevel);
+	text.setFillColor(sf::Color::Black);
+	text.setPosition(sf::Vector2f(10.0f, 550.0f));
+	window.draw(text);
+}
+
+
 void Game::render(sf::RenderWindow& window)
 {
 	window.clear(); 
 
 	player->render(window); 
 	trafficLane->render(window); 
-
+	renderLevel(window);
 	window.display();
 }
 

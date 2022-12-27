@@ -217,6 +217,8 @@ int Menu::newGame(const int& level)
 			}
 		}
 	}
+	else if (t == 2)
+		return newGame(lvl); 
 }
 
 int Menu::saveGame(const int& Level)
@@ -331,7 +333,7 @@ int Menu::saveGame(const int& Level)
 
 		if (!fout.is_open())
 		{
-			std::cout << "Could not open laod file\n";
+			std::cout << "Could not open load file\n";
 		}
 		else
 		{
@@ -368,7 +370,7 @@ int Menu::loadLevel(const sf::String& name)
 	fin.open("loadGame.txt");
 	if (!fin.is_open())
 	{
-		std::cout << "Couldn't open file\m";
+		std::cout << "Couldn't open file\n";
 		//RECHECK : draw error background
 	}
 	else
@@ -397,7 +399,37 @@ int Menu::loadLevel(const sf::String& name)
 	fout.open("loadGame.txt", std::ios::app);
 	fout << "autosave," << 1 << std::endl;
 	fout.close();
-	std::cout << "Load accout does not exist| Loading autosave account\n";
+	
+	//display 
+	window->clear();
+	sf::Texture texture; texture.loadFromFile("pic/background.png");
+	sf::Sprite sprite; sprite.setTexture(texture);
+	window->draw(sprite);
+
+	sf::Texture texture1; texture1.loadFromFile("pic/stupid.png"); 
+	sf::Sprite sprite1; sprite1.setTexture(texture1);
+	sprite1.setScale(sf::Vector2f(0.5f, 0.5f)); 
+	sprite1.setPosition(sf::Vector2f(500.0f, 100.0f)); 
+	window->draw(sprite1); 
+
+	std::string txt[2] = { "Load accout does not exist ", "Loading autosave account"}; 
+	sf::Font font; font.loadFromFile("Sugar Snow.ttf");
+	sf::Text text[2];
+	for (int i = 0; i < 2; i++)
+	{
+		text[i].setFont(font);
+		text[i].setFillColor(sf::Color::Black);
+		text[i].setString(txt[i]);
+		text[i].setCharacterSize(50);
+		text[i].setPosition(sf::Vector2f(300.0f, 300.0f + (i+1)*100));
+		window->draw(text[i]);
+		
+	}
+	window->display();
+	sf::sleep(sf::seconds(3.0f)); 
+
+
+	std::cout << "Load accout does not exist | Loading autosave account\n";
 
 	return level;
 }
@@ -405,6 +437,7 @@ int Menu::loadLevel(const sf::String& name)
 int Menu::subMenu(const int& clevel)
 {
 	window->clear();
+	std::cout << "subMenu\n";
 	//RECHECK: load background 
 
 
@@ -507,8 +540,6 @@ int Menu::loseMenu()
 		pollEvents();
 		for (int i = 0; i < 2; i++)
 		{
-			/*window->draw(menuButton[i].getShape());
-			window->draw(menuButton[i].getText());*/
 			menuButton[i].render(*window);
 		}
 		window->draw(crash);
@@ -622,6 +653,7 @@ int Menu::instruction()
 
 int Menu::rank()
 {
+	std::cout << "rank\n"; 
 	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false && window->isOpen())
 	{
 		window->clear();
@@ -629,17 +661,20 @@ int Menu::rank()
 		std::vector<int> level;
 		std::vector<std::pair<Button, Button>> box;
 		std::vector<Button> num;
-
-		Button title("TOP 5 BEST PLAYERS:", sf::Vector2f(300.0f, 300.0f), sf::Color::Blue, 24, sf::Vector2f(300.0f, 300.0f));
+		sf::Texture texture; texture.loadFromFile("pic/background.png");
+		sf::Sprite sprite; sprite.setTexture(texture);
+		window->draw(sprite);
+		Button title("TOP 5 BEST PLAYERS:", sf::Vector2f(200.0f, 30.0f), sf::Color::Black, 40, sf::Vector2f(300.0f, 300.0f));
 		sf::Text esc;
-		sf::Font font;
+		sf::Font font; font.loadFromFile("Sugar Snow.TTF");
 		esc.setString("Press Enter to return to Menu");
-		esc.setFillColor(sf::Color::Blue);
+		esc.setFont(font);
+		esc.setFillColor(sf::Color::Black);
 		esc.setCharacterSize(40);
-		esc.setPosition(sf::Vector2f(300.0f, 300.0f));
-		font.loadFromFile("Sugar Snow.TTF");
+		esc.setPosition(sf::Vector2f(300.0f, 600.0f));
+		
 		title.setFont(font);
-		title.setPosition(sf::Vector2f(350.0f, 250.0f));
+		title.setPosition(sf::Vector2f(350.0f, 50.0f));
 		title.render(*window);
 
 		window->draw(esc);
@@ -649,15 +684,20 @@ int Menu::rank()
 		fin.open("loadGame.txt", std::ios::in);
 
 		if (!fin.is_open())
+		{
+			std::cout << "Can't open file\n"; 
 			window->close(); //RECHECK 
+		}
 		else
 		{
+			std::cout << "can open file\n"; 
 			std::string infoLine;
 			std::string acc;
 			std::string levelStr;
 			int l;
 			while (fin >> infoLine)
 			{
+				std::cout << "infoLine.length(): " << infoLine.length() << '\n';
 				for (int i = 0; i < infoLine.length(); i++)
 				{
 					if (infoLine[i] != ',')
@@ -665,7 +705,7 @@ int Menu::rank()
 					else
 					{
 						while (i + 1 < infoLine.length())
-							levelStr += infoLine[i];
+							levelStr += infoLine[++i];
 
 						l = stoi(levelStr);
 						break;
@@ -681,7 +721,8 @@ int Menu::rank()
 			}
 			fin.close();
 		}
-
+		std::cout << "sort\n";
+		//sort
 		if (level.size())
 		{
 			for (int i = 0; i < level.size() - 1; i++)
@@ -696,29 +737,31 @@ int Menu::rank()
 				}
 			}
 		}
-
+		std::cout << "display\n"; 
+		//display
 		for (int i = 0; i < level.size(); i++)
 		{
 			if (i < 5)
 			{
-				Button context(info[i], sf::Vector2f(200, 250), sf::Color::Blue, 24, sf::Vector2f(200, 250));
-				Button lvl(std::to_string(level[i]), sf::Vector2f(200, 350), sf::Color::Blue, 24, sf::Vector2f(200, 350));
-				Button n(std::to_string(i + 1), sf::Vector2f(200, 450), sf::Color::Blue, 24, sf::Vector2f(200, 450));
+				Button context(info[i], sf::Vector2f(200, 250), sf::Color::Black, 40, sf::Vector2f(200, 250));
+				Button lvl(std::to_string(level[i]), sf::Vector2f(200, 350), sf::Color::Black, 40, sf::Vector2f(200, 350));
+				Button n(std::to_string(i + 1), sf::Vector2f(200, 450), sf::Color::Black, 40, sf::Vector2f(200, 450));
 
 				context.setFont(font);
 				lvl.setFont(font);
 				n.setFont(font);
 
-				context.setPosition(sf::Vector2f(200, 250));
-				lvl.setPosition(sf::Vector2f(200, 350));
-				n.setPosition(sf::Vector2f(200, 450));
+				context.setPosition(sf::Vector2f(250, 50 +(i+1)*100));
+				lvl.setPosition(sf::Vector2f(700, 50 + (i + 1) * 100));
+				n.setPosition(sf::Vector2f(200, 50 + (i + 1) * 100));
 
 				box.push_back(std::make_pair(context, lvl));
 				num.push_back(n);
 			}
 			else break;
 		}
-
+		std::cout << "Box size: " << box.size() << std::endl; 
+		
 		for (int i = 0; i < box.size(); i++)
 		{
 			box[i].first.render(*window);

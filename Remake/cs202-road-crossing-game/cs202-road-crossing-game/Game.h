@@ -35,6 +35,7 @@ public:
 	void drawNextLevel(sf::RenderWindow& window); 
 
 	void update(sf::RenderWindow& window); 
+	void renderLevel(sf::RenderWindow& window); 
 	void render(sf::RenderWindow& window); 
 };
 

@@ -5,7 +5,7 @@ void Player::initVariables()
     texturebg.loadFromFile("pic/levelbackground.png");
     bg.setTexture(texturebg);
 	shape.setSize(sf::Vector2f(100.0f, 100.0f));
-	shape.setPosition(sf::Vector2f(600, 600));
+	shape.setPosition(sf::Vector2f(600.0f, 600.0f));
 	texture.loadFromFile("pic/santa.png");
 	shape.setTexture(&texture);
 	texture.setSmooth(true);

@@ -11,7 +11,7 @@ int main() {
 		menu.loadGame();
 		break;
 	case 2:
-		menu.instruction();
+		menu.rank();
 		break;
 	case 3:
 		menu.exitGame();
