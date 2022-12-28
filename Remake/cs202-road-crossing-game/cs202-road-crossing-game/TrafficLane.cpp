@@ -9,7 +9,7 @@ void TrafficLane::initVariable()
 	for (int i = 0; i < 5; i++)
 	{
 		TrafficLight* tmp = new TrafficLight; 
-		tmp->setPosition(0,i*100.f); 
+		tmp->setPosition(0,40 + i*110.f);
 		trafficLight.push_back(tmp); 
 	}
 }
