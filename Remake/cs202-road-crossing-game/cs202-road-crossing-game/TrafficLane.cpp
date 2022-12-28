@@ -93,6 +93,7 @@ void TrafficLane::spawnEnemy(sf::RenderWindow& window)
 		/*tmp->getShape().setPosition(
 			0.f,
 			static_cast<int>(this->lane * 100)); */
+		if (lane == 0) tmp->setSize(sf::Vector2f(80.0f, 80.0f)); 
 		tmp->setPosition(sf::Vector2f(0, lane * 100));
 
 		obs.push_back(tmp);

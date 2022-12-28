@@ -6,4 +6,5 @@ PineTree::PineTree()
 	texture.loadFromFile("pic/pinetree.png");
 	shape.setTexture(&texture);
 	texture.setSmooth(true);
+	sound.openFromFile("sound/santa.ogg");
 }

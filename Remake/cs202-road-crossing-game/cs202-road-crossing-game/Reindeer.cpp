@@ -6,4 +6,5 @@ Reindeer::Reindeer()
 	texture.loadFromFile("pic/reindeer.png");
 	shape.setTexture(&texture);
 	texture.setSmooth(true);
+	sound.openFromFile("sound/santa.ogg");
 }

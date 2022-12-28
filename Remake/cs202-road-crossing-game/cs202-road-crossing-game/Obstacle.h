@@ -16,6 +16,7 @@ public:
 	void setPosition(sf::Vector2f pos);
 	void setSpeed(float x, float y); 
 	void render(sf::RenderWindow& window);
+	void setSize(sf::Vector2f size); 
 	void makeSound(); 
 };
 

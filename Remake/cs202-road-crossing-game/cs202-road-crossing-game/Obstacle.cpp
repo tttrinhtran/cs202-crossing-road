@@ -26,6 +26,11 @@ void Obstacle::render(sf::RenderWindow& window)
     window.draw(shape);
 }
 
+void Obstacle::setSize(sf::Vector2f size)
+{
+    shape.setSize(size);
+}
+
 void Obstacle::makeSound()
 {
     sound.setLoop(0);

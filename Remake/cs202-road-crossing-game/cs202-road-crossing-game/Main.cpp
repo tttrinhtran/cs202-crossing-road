@@ -13,7 +13,7 @@ int main() {
 	case 2:
 		menu.rank();
 		break;
-	case 3:
+	case 4:
 		menu.exitGame();
 		break;
 	default:

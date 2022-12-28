@@ -6,4 +6,5 @@ Candy::Candy()
 	texture.loadFromFile("pic/candy.png");
 	shape.setTexture(&texture);
 	texture.setSmooth(true);
+	sound.openFromFile("sound/santa.ogg");
 }

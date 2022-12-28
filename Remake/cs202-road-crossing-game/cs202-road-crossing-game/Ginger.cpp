@@ -6,4 +6,5 @@ Ginger::Ginger()
 	texture.loadFromFile("pic/ginger.png");
 	shape.setTexture(&texture);
 	texture.setSmooth(true);
+	sound.openFromFile("sound/santa.ogg");
 }

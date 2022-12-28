@@ -27,9 +27,9 @@ Menu::Menu()
 	initBackground();
 
 	bgMusic = true;
-	sound.openFromFile("sound/go.ogg");
-	sound.setPlayingOffset(sf::seconds(15.f));
-	sound.setVolume(24);
+	sound.openFromFile("sound/welcome.ogg");
+	//sound.setPlayingOffset(sf::seconds(15.f));
+	sound.setVolume(10);
 	sound.setLoop(true);
 	play_sound();
 }
@@ -71,7 +71,7 @@ void Menu::renderBackground(sf::RenderWindow& window) // redundant
 	window.draw(bgSprite);
 }
 
-std::string Menu::setSound()
+std::string Menu::set_sound()
 {
 	sf::sleep(sf::seconds(0.175));
 	bgMusic = !bgMusic;
@@ -131,7 +131,7 @@ int Menu::renderMain()
 					if (button[i].mouseClick(*window))
 					{
 						if (i == 3)
-							button[i].setString(setSound());
+							button[i].setString(set_sound());
 						else
 							return i;
 					}
@@ -495,7 +495,7 @@ int Menu::subMenu(const int& clevel)
 					if (menuButton[i].mouseClick(*window))
 					{
 						if (i == 3)
-							menuButton[i].setString(setSound());
+							menuButton[i].setString(set_sound());
 						else
 							return i;
 					}
@@ -628,6 +628,28 @@ int Menu::loadGame()
 int Menu::exitGame()
 {
 	std::cout << "exitGame\n";
+
+	bgMusic = !bgMusic; 
+	play_sound(); 
+	window->clear();
+	sf::Texture texture; texture.loadFromFile("pic/bye.png"); 
+	sf::Sprite sprite; sprite.setTexture(texture); 
+	window->draw(sprite); 
+
+	sf::Text text; sf::Font font; font.loadFromFile("Sugar Snow.ttf"); 
+	text.setString("GOOD BYE"); text.setFillColor(sf::Color::Black); text.setFont(font); 
+	text.setPosition(sf::Vector2f(550.0f, 600.0f)); text.setCharacterSize(50); 
+	window->draw(text); 
+	window->display(); 
+
+	sf::Music m;
+	m.openFromFile("sound/merry-christmas.ogg"); 
+	m.setVolume(100);
+	m.setLoop(0);
+	m.play(); 
+	sf::sleep(sf::seconds(4.0f));
+
+
 	window->close();
 	this->~Menu();
 	exit(0);

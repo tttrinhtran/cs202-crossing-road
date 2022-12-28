@@ -6,4 +6,5 @@ Wood::Wood()
 	texture.loadFromFile("pic/wood.png");
 	shape.setTexture(&texture);
 	texture.setSmooth(true);
+	sound.openFromFile("sound/santa.ogg");
 }

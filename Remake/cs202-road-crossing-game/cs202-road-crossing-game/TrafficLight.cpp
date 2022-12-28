@@ -2,7 +2,7 @@
 
 void TrafficLight::initVariables()
 {
-	shape.setSize(sf::Vector2f(50.f, 50.f)); 
+	shape.setSize(sf::Vector2f(40.f, 40.f)); 
 	shape.setFillColor(sf::Color::Red); 
 }
 

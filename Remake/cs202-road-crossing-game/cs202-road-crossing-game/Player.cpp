@@ -2,7 +2,7 @@
 
 void Player::initVariables()
 {
-    texturebg.loadFromFile("pic/levelbackground.png");
+    texturebg.loadFromFile("pic/replace.png");
     bg.setTexture(texturebg);
 	shape.setSize(sf::Vector2f(100.0f, 100.0f));
 	shape.setPosition(sf::Vector2f(600.0f, 600.0f));
@@ -22,6 +22,7 @@ sf::RectangleShape Player::getshape()
 {
 	return shape;
 }
+
 
 void Player::reset()
 {

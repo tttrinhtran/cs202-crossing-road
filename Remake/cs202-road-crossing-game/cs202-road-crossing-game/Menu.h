@@ -29,7 +29,7 @@ public:
 
 	void pollEvents();
 	void play_sound();
-	std::string setSound();
+	std::string set_sound();
 	void renderBackground(sf::RenderWindow& window);
 	//Menu list of choice
 	int renderMain();
