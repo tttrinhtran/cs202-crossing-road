@@ -534,6 +534,11 @@ int Menu::loseMenu()
 		a.setPosition(pos);
 		menuButton.push_back(a);
 	}
+	window->clear(); 
+
+	sf::Texture texture; texture.loadFromFile("pic/background.png"); 
+	sf::Sprite sprite; sprite.setTexture(texture); 
+	window->draw(sprite);
 
 	while (window->isOpen())
 	{
