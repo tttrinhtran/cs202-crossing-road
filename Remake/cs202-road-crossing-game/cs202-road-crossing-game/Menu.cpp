@@ -99,7 +99,7 @@ int Menu::renderMain()
 	{
 		Button a(menu[i], sf::Vector2f((float)600, (float)(250 + i * 50)), sf::Color::White, 24, sf::Vector2f((float)600, (float)(250 + i * 50)));
 		a.setFont(font);
-		a.setPosition(sf::Vector2f((float)600, (float)(250 + i * 50)));
+		a.setPosition(sf::Vector2f((float)600, (float)(300 + i * 50)));
 		button.push_back(a);
 	}
 
@@ -108,12 +108,38 @@ int Menu::renderMain()
 	sf::Time time = sf::seconds(0.10f);
 	clock.restart().asSeconds();
 
+	//decor
+	sf::Texture tt; tt.loadFromFile("pic/snowman.png");
+	sf::Sprite sp; sp.setTexture(tt); 
+	sp.setPosition(sf::Vector2f(270.0f, 300.0f));
+	
+	sf::Texture tt1; tt1.loadFromFile("pic/tree.png");
+	sf::Sprite sp1; sp1.setTexture(tt1); 
+	sp1.setPosition(sf::Vector2f(850.0f, 280.0f));
+
+	std::string txt[2] = { "CROSSING ROAD", "MADE BY GROUP 05" }; 
+	sf::Text text[2];  
+	for (int i = 0; i < 2; i++)
+	{
+		text[i].setString(txt[i]); 
+		text[i].setFont(font); 
+		text[i].setPosition(sf::Vector2f(450.0f, (i + 1) * 80)); 
+		text[i].setFillColor(sf::Color (4, 68, 43));
+		text[i].setCharacterSize(60);
+	}
+
 	while (window->isOpen())
 	{
 		pollEvents();
 
 		//renderBackground(*window);
 		window->draw(bgSprite);
+		snowfall.update(*window);
+		snowfall.render(*window);
+		window->draw(sp);
+		window->draw(sp1);
+		for (int i = 0; i < 2; i++)
+			window->draw(text[i]);
 		for (int i = 0; i < 5; i++) {
 			//getShape
 			button[i].render(*window);
@@ -230,7 +256,7 @@ int Menu::saveGame(const int& Level)
 	texture.loadFromFile("pic/background.png");
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
-
+	
 
 	std::string name = "";
 	sf::String sentence;
@@ -286,76 +312,94 @@ int Menu::saveGame(const int& Level)
 	std::ofstream fout;
 	std::ifstream fin;
 
-	fin.open("loadGame.txt", std::ios::in);
-	if (!fin.is_open())
+	fin.open("loadGame.txt");
+	/*if (!fin.is_open())
 		std::cout << "Couldn't open load file" << std::endl;
 	else
+	{*/
+	std::vector<std::pair<std::string, int>> list;
+	int level;
+	std::string info;
+	std::string acc;
+	std::string lvl;
+	bool check = false;
+
+	while (fin >> info)
 	{
-		std::vector<std::pair<std::string, int>> list;
-		int level;
-		std::string info;
-		std::string acc;
-		std::string lvl;
-		bool check = false;
-
-		while (fin >> info)
+		for (int i = 0; i < info.length(); i++)
 		{
-			for (int i = 0; i < info.length(); i++)
-			{
-				if (info[i] != ',')
-					acc += info[i];
-				else
-				{
-					while (i + 1 < info.length())
-						lvl += info[++i];
-					level = stoi(lvl);
-					break;
-				}
-			}
-
-			if (acc == name) {
-				check = true;
-				level = Level;
-			}
-
-			list.push_back(make_pair(acc, level));
-
-			acc.clear();
-			lvl.clear();
-			info.clear();
-		}
-		fin.close();
-
-		if (check)
-			fout.open("loadGame.txt");
-		else
-			fout.open("loadGame.txt", std::ios::app);
-
-		if (!fout.is_open())
-		{
-			std::cout << "Could not open load file\n";
-		}
-		else
-		{
-			if (check)
-			{
-				/*for (int i = 0; i < list.size(); i++)
-				{
-					fout << list[i].first << ',' << list[i].second << '\n';
-				}*/
-
-				for (auto i = list.begin(); i != list.end(); i++)
-					fout << i->first << ',' << i->second << '\n';
-			}
+			if (info[i] != ',')
+				acc += info[i];
 			else
-				fout << name << ',' << Level << '\n';
-			fout.close();
+			{
+				while (i + 1 < info.length())
+					lvl += info[++i];
+				level = stoi(lvl);
+				break;
+			}
 		}
 
-		std::cout << "Save successfully\n";
-		return Level;
+		if (acc == name) {
+			check = true;
+			level = Level;
+		}
+
+		list.push_back(make_pair(acc, level));
+
+		acc.clear();
+		lvl.clear();
+		info.clear();
 	}
-	return 1;
+	fin.close();
+
+	if (check == false)
+		fout.open("loadGame.txt");
+	else
+		fout.open("loadGame.txt", std::ios::app);
+
+	if (!fout.is_open())
+	{
+		std::cout << "Could not open write file\n";
+	}
+	else
+	{
+		if (check)
+		{
+			/*for (int i = 0; i < list.size(); i++)
+			{
+				fout << list[i].first << ',' << list[i].second << '\n';
+			}*/
+
+			for (auto i = list.begin(); i != list.end(); i++)
+				fout << i->first << ',' << i->second << '\n';
+		}
+		else
+			fout << name << ',' << Level << '\n';
+		fout.close();
+	}
+		
+	//decor
+
+	window->clear();
+	window->draw(sprite);
+
+	sf::Texture texture1; texture1.loadFromFile("pic/stupid.png");
+	sf::Sprite sprite1; sprite1.setTexture(texture1);
+	sprite1.setScale(sf::Vector2f(0.5f, 0.5f));
+	sprite1.setPosition(sf::Vector2f(500.0f, 100.0f));
+	window->draw(sprite1);
+
+	sf::Text text1; 
+	text1.setFont(font); text1.setString("SAVING ACCOUNT SUCCESFULLY"); 
+	text1.setFillColor(sf::Color::Black); 
+	text1.setCharacterSize(50);
+	text1.setPosition(sf::Vector2f(300.0f, 400.0f)); 
+	window->draw(text1);
+	window->display();
+	sf::sleep(sf::seconds(3.0f));
+
+	std::cout << "Save successfully\n";
+	return Level;
 }
 
 int Menu::loadLevel(const sf::String& name)
@@ -460,7 +504,7 @@ int Menu::subMenu(const int& clevel)
 
 	Button level(curLevel, sf::Vector2f(200, 200), sf::Color::Red, 40, sf::Vector2f(200, 200)); //RECHECK 
 	level.setFont(font);
-	level.setPosition(sf::Vector2f(200, 200));
+	level.setPosition(sf::Vector2f(200, 250));
 
 	sf::Clock clock;
 	sf::Time time = sf::seconds(0.10f);

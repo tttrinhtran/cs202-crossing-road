@@ -1,6 +1,7 @@
 #pragma once
 #include "Header.h"
 #include "Game.h"
+#include "Snowfall.h"
 
 //0 : new game
 //1 : load game
@@ -19,6 +20,7 @@ private:
 	bool bgMusic; 
 
 	Game* game = nullptr; 
+	Snowfall snowfall;
 
 	void initVariables(); 
 	void initWindow(); 

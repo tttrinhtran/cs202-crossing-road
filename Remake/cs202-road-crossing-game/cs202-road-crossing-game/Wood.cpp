@@ -2,7 +2,7 @@
 
 Wood::Wood()
 {
-	shape.setSize(sf::Vector2f(100.0f, 100.0f));
+	shape.setSize(sf::Vector2f(60.0f, 80.0f));
 	texture.loadFromFile("pic/wood.png");
 	shape.setTexture(&texture);
 	texture.setSmooth(true);
