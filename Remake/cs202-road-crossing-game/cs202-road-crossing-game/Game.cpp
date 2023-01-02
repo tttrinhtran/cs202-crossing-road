@@ -75,6 +75,8 @@ void Game::render(sf::RenderWindow& window)
 
 int Game::runGame(sf::RenderWindow& window)
 {
+	window.create(sf::VideoMode(1280, 220 + 100 * trafficLane->laneCount), "Crossing Road");
+	window.setFramerateLimit(60);
 	while (window.isOpen())
 	{
 		if (!win)
@@ -95,7 +97,7 @@ int Game::runGame(sf::RenderWindow& window)
 				}
 			}
 			//window.clear(sf::Color::Black); // RECHECK 
-			player->reset(); 
+			player->reset(trafficLane->laneCount); 
 			return runGame(window); 
 		}
 
@@ -129,6 +131,13 @@ bool Game::isWin()
 {
 	if (player->getshape().getGlobalBounds().top == 0)
 	{
+		int change = rand() % 3;
+		trafficLane->Attr_Change(change);
+		change = rand() % 3;
+		trafficLane->Attr_Change(change);
+
+		trafficLane->initVariable();
+
 		++level;
 		win = true; 
 		return true; 
@@ -151,3 +160,4 @@ void Game::drawNextLevel(sf::RenderWindow& window)
 	window.draw(text);
 	window.display(); 
 }
+
