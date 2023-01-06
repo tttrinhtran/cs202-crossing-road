@@ -23,9 +23,10 @@ sf::RectangleShape Player::getshape()
 	return shape;
 }
 
-void Player::reset(int laneCount)
+
+void Player::reset()
 {
-	shape.setPosition(600, 100 + laneCount * 100);
+	shape.setPosition(600, 600);
 }
 
 void Player::updateInput()

@@ -16,7 +16,7 @@ public:
 	virtual ~Player(); 
 
 	sf::RectangleShape getshape(); 
-	void reset(int laneCount); 
+	void reset(); 
 	void updateInput(); 
 	void updateWindowBoundsCollision(const sf::RenderWindow& window); 
 	void update(sf::RenderWindow& window);

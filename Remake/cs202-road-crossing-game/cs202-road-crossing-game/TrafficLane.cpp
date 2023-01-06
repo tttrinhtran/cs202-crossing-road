@@ -6,10 +6,8 @@
 #include "Wood.h"
 void TrafficLane::initVariable()
 {
-	for (int i = trafficLight.size(); i < laneCount; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		bool t = 0;
-		traffic.push_back(t);
 		TrafficLight* tmp = new TrafficLight; 
 		tmp->setPosition(0,40 + i*110.f);
 		trafficLight.push_back(tmp); 
@@ -25,7 +23,7 @@ TrafficLane::~TrafficLane()
 {
 	for (int i = 0; i < obs.size(); i++)
 		delete obs[i];
-	for (int i = 0; i < trafficLight.size(); i++)
+	for (int i = 0; i < 5; i++)
 		delete trafficLight[i];
 }
 
@@ -37,9 +35,9 @@ bool TrafficLane::canMove(int lane)
 
 void TrafficLane::update(sf::RenderWindow& window, int level)
 {
-	for (int i = 0; i < trafficLight.size(); i++)
+	for (int i = 0; i < 5; i++)
 		trafficLight[i]->update(!canMove(i)); 
-	if (obs.size() < 10 + spawnRate)
+	if (obs.size() < 10 + level)
 	{
 		if (timer >= timeSpawning)
 		{
@@ -47,17 +45,17 @@ void TrafficLane::update(sf::RenderWindow& window, int level)
 			timer = 0.f;
 		}
 		else
-			timer += 0.5f + float(spawnRate) / 5; 
+			timer += 0.5f + float(level) / 5; 
 	}
 
 	for (int i = 0; i < obs.size(); i++)
 	{
-		obs[i]->setSpeed(float(5 + speed), 0.f); 
+		obs[i]->setSpeed(float(5 + level), 0.f); 
 		
 		if (clock.getElapsedTime() >= sf::seconds(1 + rand() % 5))
 		{
 			srand(time(NULL));
-			for (int i = 0; i < traffic.size(); i++)
+			for (int i = 0; i < 5; i++)
 				traffic[i] = rand() % 2; 
 			clock.restart(); 
 		}
@@ -73,9 +71,9 @@ void TrafficLane::update(sf::RenderWindow& window, int level)
 
 void TrafficLane::spawnEnemy(sf::RenderWindow& window)
 {
-	int k = rand() % laneCount;
+	int k = rand() % 5;
 	if (k != lane) lane = k;
-	else if (k == lane) lane = (k + 1) % laneCount;
+	else if (k == lane) lane = (k + 1) % 5;
 
 	if (canMove(lane))
 	{
@@ -136,23 +134,4 @@ bool TrafficLane::Collision(sf::FloatRect coll)
 void TrafficLane::resetTimer()
 {
 	clock.restart();
-}
-
-void TrafficLane::Attr_Change(int attr)
-{
-	std::cout << "attribute change: " << attr << std::endl;
-	switch (attr)
-	{
-		case 0:
-			if (laneCount < lane_limit)
-			{
-				laneCount++;
-				break;
-			}
-			attr = rand() % 1 + 2;
-		case 1:
-			spawnRate++;
-		case 2:
-			speed++;
-	}
 }
