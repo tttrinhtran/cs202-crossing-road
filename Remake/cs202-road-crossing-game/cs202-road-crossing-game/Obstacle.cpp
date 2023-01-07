@@ -37,3 +37,8 @@ void Obstacle::makeSound()
     sound.play(); 
     sf::sleep(sf::seconds(1.5f)); 
 }
+
+bool Obstacle::checkType()
+{
+    return false;
+}

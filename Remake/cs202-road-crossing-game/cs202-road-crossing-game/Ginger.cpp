@@ -8,3 +8,8 @@ Ginger::Ginger()
 	texture.setSmooth(true);
 	sound.openFromFile("sound/santa.ogg");
 }
+
+bool Ginger::checkType()
+{
+	return false;
+}

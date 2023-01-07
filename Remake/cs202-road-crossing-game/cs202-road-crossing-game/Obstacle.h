@@ -18,5 +18,6 @@ public:
 	void render(sf::RenderWindow& window);
 	void setSize(sf::Vector2f size); 
 	void makeSound(); 
+	virtual bool checkType(); 
 };
 

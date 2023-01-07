@@ -8,3 +8,9 @@ Candy::Candy()
 	texture.setSmooth(true);
 	sound.openFromFile("sound/santa.ogg");
 }
+
+bool Candy::checkType()
+{
+	return false;
+}
+

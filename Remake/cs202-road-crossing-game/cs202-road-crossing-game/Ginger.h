@@ -5,5 +5,6 @@ class Ginger : public Obstacle
 private: 
 public: 
 	Ginger(); 
+	virtual bool checkType();
 };
 

@@ -5,5 +5,6 @@ class Wood : public Obstacle
 private: 
 public: 
 	Wood();
+	virtual bool checkType();
 };
 

@@ -8,3 +8,9 @@ PineTree::PineTree()
 	texture.setSmooth(true);
 	sound.openFromFile("sound/santa.ogg");
 }
+
+bool PineTree::checkType()
+{
+	return false;
+}
+

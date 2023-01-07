@@ -5,5 +5,6 @@ class Candy : public Obstacle
 private: 
 public: 
 	Candy(); 
+	virtual bool checkType();
 };
 

@@ -59,8 +59,16 @@ void TrafficLane::update(sf::RenderWindow& window, int level)
 				traffic[i] = rand() % 2; 
 			clock.restart(); 
 		}
+		
 		if (canMove(light[i]))
-			obs[i]->update(); 
+		{
+			obs[i]->update();
+		}
+		else
+		{
+			if (obs[i]->checkType())
+				obs[i]->update();
+		}
 		if (obs[i]->getShape().getPosition().x > window.getSize().x)
 		{
 			obs.erase(obs.begin() + i); 

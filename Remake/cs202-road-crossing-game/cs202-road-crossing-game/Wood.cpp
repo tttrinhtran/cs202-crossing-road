@@ -8,3 +8,9 @@ Wood::Wood()
 	texture.setSmooth(true);
 	sound.openFromFile("sound/santa.ogg");
 }
+
+bool Wood::checkType()
+{
+	return false;
+}
+

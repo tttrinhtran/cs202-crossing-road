@@ -5,5 +5,6 @@ class PineTree : public Obstacle
 private: 
 public: 
 	PineTree(); 
+	virtual bool checkType();
 };
 

@@ -8,3 +8,8 @@ Reindeer::Reindeer()
 	texture.setSmooth(true);
 	sound.openFromFile("sound/santa.ogg");
 }
+
+bool Reindeer::checkType()
+{
+	return true;
+}

@@ -5,5 +5,6 @@ class Reindeer : public Obstacle
 private: 
 public: 
 	Reindeer();
+	virtual bool checkType(); 
 };
 

@@ -29,7 +29,7 @@ Menu::Menu()
 	bgMusic = true;
 	sound.openFromFile("sound/welcome.ogg");
 	//sound.setPlayingOffset(sf::seconds(15.f));
-	sound.setVolume(10);
+	sound.setVolume(30);
 	sound.setLoop(true);
 	play_sound();
 }
@@ -244,7 +244,9 @@ int Menu::newGame(const int& level)
 		}
 	}
 	else if (t == 2)
-		return newGame(lvl); 
+		return newGame(lvl);
+	else if (t == 20)
+		return renderMain();
 }
 
 int Menu::saveGame(const int& Level)
@@ -259,7 +261,7 @@ int Menu::saveGame(const int& Level)
 	
 
 	std::string name = "";
-	sf::String sentence;
+	sf::String sentence = "";
 	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
 	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black); text.setPosition(sf::Vector2f(150, 150));
 
