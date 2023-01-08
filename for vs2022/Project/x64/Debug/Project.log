@@ -40,21 +40,21 @@ C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(7
           [
               T=float
           ]
-C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(885,46): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(888,46): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(886,42): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(889,42): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(887,40): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(890,40): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
 C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(256): warning C4715: 'Menu::newGame': not all control paths return a value
-C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(925): warning C4715: 'Menu::rank': not all control paths return a value
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(928): warning C4715: 'Menu::rank': not all control paths return a value
   Project.vcxproj -> C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\x64\Debug\Project.exe

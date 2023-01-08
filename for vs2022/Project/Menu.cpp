@@ -752,13 +752,16 @@ int Menu::instruction()
 		}
 	}
 
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false &&  window->isOpen())
+	window->draw(sprite);
+	window->draw(sprite1);
+	for (int i = 0; i < 7; i++) window->draw(text[i]); 
+	window->display();
+	
+	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false)
 	{
-		window->draw(sprite);
-		window->draw(sprite1);
-		for (int i = 0; i < 7; i++) window->draw(text[i]); 
-		window->display();
+		pollEvents();
 	}
+
 	switch (renderMain())
 	{
 	case 0:

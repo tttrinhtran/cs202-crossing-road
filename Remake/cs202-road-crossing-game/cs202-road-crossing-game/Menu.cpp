@@ -751,13 +751,15 @@ int Menu::instruction()
 			text[i].setPosition(sf::Vector2f(500.0f, 80.0f));
 		}
 	}
-
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false &&  window->isOpen())
+	
+	window->draw(sprite);
+	window->draw(sprite1);
+	for (int i = 0; i < 7; i++) window->draw(text[i]); 
+	window->display();
+	
+	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false)
 	{
-		window->draw(sprite);
-		window->draw(sprite1);
-		for (int i = 0; i < 7; i++) window->draw(text[i]); 
-		window->display();
+		pollEvents();
 	}
 	switch (renderMain())
 	{
@@ -770,10 +772,10 @@ int Menu::instruction()
 	case 2:
 		return rank();
 		break;
-	case 3:
+	case 4:
 		return instruction();
 		break;
-	case 4:
+	case 5:
 		return exitGame();
 		break;
 	default:
