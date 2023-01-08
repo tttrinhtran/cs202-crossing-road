@@ -155,14 +155,14 @@ void Game::drawWin(sf::RenderWindow& window)
 	text.setFont(font);
 	text.setCharacterSize(40);
 	text.setFillColor(sf::Color::Red);
-	text.setString("YOU HAVE FINISHED ALL LEVELS! PRESS ENTER TO PROCEED");
-	text.setPosition(sf::Vector2f(100.0f, 500.0f));
+	text.setString("CONGRATULATIONS! YOU HAVE GUIDED THE SANTA THROUGH ALL LEVELS!");
+	text.setPosition(sf::Vector2f(25.0f, 500.0f));
 	
 	sf::Text text2;
 	text2.setFont(font);
 	text2.setCharacterSize(40);
 	text2.setFillColor(sf::Color::Red);
-	text2.setString("Press ENTER to back to Main Menu");
+	text2.setString("Press ENTER to proceed");
 	text2.setPosition(sf::Vector2f(400.0f, 550.0f));
 
 

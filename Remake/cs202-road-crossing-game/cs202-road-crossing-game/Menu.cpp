@@ -11,7 +11,7 @@ void Menu::initWindow()
 {
 	videoMode.width = 1280;
 	videoMode.height = 720;
-	window = new sf::RenderWindow(videoMode, "Crossing Road", sf::Style::Close | sf::Style::Titlebar);
+	window = new sf::RenderWindow(videoMode, "The Santa's Crossing Road", sf::Style::Close | sf::Style::Titlebar);
 	window->setFramerateLimit(60);
 }
 
@@ -120,7 +120,7 @@ int Menu::renderMain()
 	sf::Sprite sp1; sp1.setTexture(tt1); 
 	sp1.setPosition(sf::Vector2f(850.0f, 280.0f));
 
-	std::string txt[2] = { "CROSSING ROAD", "MADE BY GROUP 05" }; 
+	std::string txt[2] = { "THE SANTA'S CROSSING ROAD", "MADE BY GROUP 05" }; 
 	sf::Text text[2];  
 	for (int i = 0; i < 2; i++)
 	{
@@ -393,6 +393,7 @@ int Menu::loadLevel(const sf::String& name)
 	{
 		while (std::getline(fin, info))
 		{
+			if (info == "") continue;
 			for (int i = 0; i < info.length(); i++)
 			{
 				if (info[i] != ',')
@@ -802,6 +803,7 @@ int Menu::rank()
 		int l;
 		while (std::getline(fin, infoLine))
 		{
+			if (infoLine == "") continue;
 			std::cout << "infoLine.length(): " << infoLine.length() << '\n';
 			for (int i = 0; i < infoLine.length(); i++)
 			{
