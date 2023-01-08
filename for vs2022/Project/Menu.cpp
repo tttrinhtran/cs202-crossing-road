@@ -770,10 +770,10 @@ int Menu::instruction()
 	case 2:
 		return rank();
 		break;
-	case 3:
+	case 4:
 		return instruction();
 		break;
-	case 4:
+	case 5:
 		return exitGame();
 		break;
 	default:
