@@ -603,6 +603,8 @@ int Menu::loadGame()
 
 	while (window->isOpen() && name.length() == 0)
 	{
+		pollEvents();
+
 		sf::Event event;
 		while (window->pollEvent(event))
 		{
@@ -728,12 +730,14 @@ int Menu::instruction()
 		textLine->setPosition(linePosition);
 	}
 
+	window->draw(sprite);
+	window->draw(sprite1);
+	for (int i = 0; i < 8; i++) window->draw(text[i]); 
+	window->display();
+
 	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false &&  window->isOpen())
 	{
-		window->draw(sprite);
-		window->draw(sprite1);
-		for (int i = 0; i < 8; i++) window->draw(text[i]); 
-		window->display();
+		pollEvents();
 	}
 	
 	return show();
@@ -744,6 +748,8 @@ int Menu::rank()
 	std::cout << "rank\n"; 
 	while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && window->isOpen())
 	{
+		pollEvents();
+
 		window->clear();
 		std::vector<std::string> info;
 		std::vector<int> level;
