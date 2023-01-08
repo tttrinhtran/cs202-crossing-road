@@ -2,7 +2,7 @@
 
 This is project in Programming Systems Course (CS202), VNU-HCMUS.
 
-We write this game in C++ with support of SFML, which provides a simple interface to the various components of your PC, to ease the development of games and multimedia applications, Kenney and Zapsplat gives us free pictures and sounds.
+We write this game in C++ with support of SFML, which provides a simple interface to the various components of your PC, to ease the development of games and multimedia applications.
 
 # Description
 
