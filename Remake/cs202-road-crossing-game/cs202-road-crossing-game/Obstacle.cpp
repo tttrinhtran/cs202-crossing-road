@@ -7,7 +7,7 @@ sf::RectangleShape Obstacle::getShape()
 
 void Obstacle::update()
 {
-    shape.move(speed.x, speed.y); 
+    shape.move(speed.x, speed.y);
 }
 
 void Obstacle::setPosition(sf::Vector2f pos)

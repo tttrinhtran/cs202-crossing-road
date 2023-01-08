@@ -14,8 +14,10 @@ int main() {
 		menu.rank();
 		break;
 	case 4:
-		menu.exitGame();
+		menu.instruction();
 		break;
+	case 5: 
+		menu.exitGame(); 
 	default:
 		break;
 	}

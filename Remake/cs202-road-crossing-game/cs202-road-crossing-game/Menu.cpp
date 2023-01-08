@@ -90,14 +90,14 @@ int Menu::renderMain()
 	std::cout << "renderMain\n" << '\n';
 	window->clear();
 
-	std::string menu[5] = { "NEW GAME", "LOAD GAME","RANKING", "MUSIC: ON" , "EXIT" };
+	std::string menu[6] = { "NEW GAME", "LOAD GAME","RANKING", "MUSIC: ON" , "INSTRUCTION", "EXIT" };
 	if (!bgMusic) menu[3] = "MUSIC: OFF";
 	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
 	std::vector <Button> button;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
-		Button a(menu[i], sf::Vector2f((float)600, (float)(250 + i * 50)), sf::Color::White, 24, sf::Vector2f((float)600, (float)(250 + i * 50)));
+		Button a(menu[i], sf::Vector2f((float)600, (float)(250 + i * 50)), sf::Color::Black, 24, sf::Vector2f((float)600, (float)(250 + i * 50)));
 		a.setFont(font);
 		a.setPosition(sf::Vector2f((float)600, (float)(300 + i * 50)));
 		button.push_back(a);
@@ -140,11 +140,11 @@ int Menu::renderMain()
 		window->draw(sp1);
 		for (int i = 0; i < 2; i++)
 			window->draw(text[i]);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			//getShape
 			button[i].render(*window);
 		}
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			button[i].mouseClick(*window);
 		}
@@ -153,7 +153,7 @@ int Menu::renderMain()
 		{
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i < 6; i++) {
 					if (button[i].mouseClick(*window))
 					{
 						if (i == 3)
@@ -209,7 +209,10 @@ int Menu::newGame(const int& level)
 			case 2:
 				return rank(); //rank
 				break;
-			case 3:
+			case 3: 
+				return instruction(); 
+				break; 
+			case 4:
 				return exitGame();
 				break;
 			default:
@@ -235,7 +238,10 @@ int Menu::newGame(const int& level)
 			case 2:
 				return rank(); //rank
 				break;
-			case 3:
+			case 3: 
+				return instruction();
+				break; 
+			case 4:
 				return exitGame();
 				break;
 			default:
@@ -681,14 +687,14 @@ int Menu::exitGame()
 	std::cout << "exitGame\n";
 
 	bgMusic = !bgMusic; 
-	play_sound(); 
+	play_sound();
 	window->clear();
 	sf::Texture texture; texture.loadFromFile("pic/bye.png"); 
 	sf::Sprite sprite; sprite.setTexture(texture); 
 	window->draw(sprite); 
 
-	sf::Text text; sf::Font font; font.loadFromFile("Sugar Snow.ttf"); 
-	text.setString("GOOD BYE"); text.setFillColor(sf::Color::Black); text.setFont(font); 
+	sf::Text text; sf::Font font; font.loadFromFile("sugar snow.ttf"); 
+	text.setString("good bye"); text.setFillColor(sf::Color::Black); text.setFont(font); 
 	text.setPosition(sf::Vector2f(550.0f, 600.0f)); text.setCharacterSize(50); 
 	window->draw(text); 
 	window->display(); 
@@ -710,18 +716,70 @@ int Menu::exitGame()
 int Menu::instruction()
 {
 	window->clear();
+	std::cout << "instruction\n"; 
 	sf::Texture texture;
-	texture.loadFromFile("pic/shiba.png");
+	texture.loadFromFile("pic/background.png");
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
-	sf::Event event;
-	while (window->isOpen())
+
+	sf::Texture texture1; texture1.loadFromFile("pic/awsd.png"); 
+	sf::Sprite sprite1; sprite1.setTexture(texture1); 
+	sprite1.setScale(sf::Vector2f(0.9f, 0.9f)); 
+	sprite1.setPosition(sf::Vector2f(830.0f, 180.0f)); 
+	
+	std::string line[7] = { "Use A,W,S,D to move the characters avoid the obstacles.",
+						   "When you finish the final level, all of data will reset.",
+							"Use mouseclick to choose the options in menu lists.",
+							"Turning on/off the music as you want", "Save/Load the game that you may miss.", 
+							"GOOD LUCK", "INSTRUCTION"};
+	
+	sf::Text text[7]; sf::Font font; font.loadFromFile("Sugar Snow.ttf"); 
+	for (int i = 0; i < 7; i++)
 	{
-		pollEvents();
+		text[i].setFont(font);
+		text[i].setString(line[i]);
+		if (i <= 5)
+		{
+			text[i].setCharacterSize(35);
+			text[i].setPosition(sf::Vector2f(30, 180 + (i + 1) * 50));
+			text[i].setFillColor(sf::Color::Red);
+		}
+		else
+		{
+			text[i].setFillColor(sf::Color(4, 68, 43));
+			text[i].setCharacterSize(50);
+			text[i].setPosition(sf::Vector2f(500.0f, 80.0f));
+		}
+	}
+
+	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false &&  window->isOpen())
+	{
 		window->draw(sprite);
+		window->draw(sprite1);
+		for (int i = 0; i < 7; i++) window->draw(text[i]); 
 		window->display();
 	}
-	return 2;
+	switch (renderMain())
+	{
+	case 0:
+		return newGame();
+		break;
+	case 1:
+		return loadGame();
+		break;
+	case 2:
+		return rank();
+		break;
+	case 3:
+		return instruction();
+		break;
+	case 4:
+		return exitGame();
+		break;
+	default:
+		break;
+	}
+	return 30;
 }
 
 int Menu::rank()
@@ -855,7 +913,10 @@ int Menu::rank()
 	case 2:
 		return rank();
 		break;
-	case 3:
+	case 3: 
+		return instruction();
+		break;
+	case 4:
 		return exitGame();
 		break;
 	default:

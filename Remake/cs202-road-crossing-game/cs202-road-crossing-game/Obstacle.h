@@ -7,11 +7,11 @@ protected:
 	sf::RectangleShape shape; 
 	sf::Texture texture; 
 
-	sf::Music sound; 
+	sf::Music sound;
 	friend class TrafficLane; 
 public: 
 	sf::RectangleShape getShape(); 
-
+	
 	void update(); 
 	void setPosition(sf::Vector2f pos);
 	void setSpeed(float x, float y); 

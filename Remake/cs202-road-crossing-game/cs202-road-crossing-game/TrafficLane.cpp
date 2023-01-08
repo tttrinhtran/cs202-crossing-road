@@ -98,8 +98,9 @@ void TrafficLane::spawnEnemy(sf::RenderWindow& window)
 		else if (t == 4)
 			tmp = new Ginger;
 		std::cout << "Lane: " << lane << '\n';
+		
+		
 		tmp->setPosition(sf::Vector2f(0, lane * 110 + 13));
-
 		obs.push_back(tmp);
 		light.push_back(lane);
 	}

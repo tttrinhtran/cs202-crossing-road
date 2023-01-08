@@ -41,8 +41,9 @@ public:
 	int subMenu(const int& level);
 	int loseMenu();
 	int loadGame();
-	int rank();
+	int rank(); 
 	template<class T> void swap(T& a, T& b);
+	void drawBye(); 
 	int exitGame();
 	int instruction();
 };
