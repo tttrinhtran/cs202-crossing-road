@@ -9,6 +9,8 @@ void Game::initVariables()
 	level = 1;
 	pause = false; 
 	win = false;
+
+	unexpectedExit = false;
 }
 
 Game::Game()
@@ -30,12 +32,10 @@ void Game::pollEvents(sf::RenderWindow& window)
 		switch (event.type)
 		{
 		case sf::Event::Closed: 
-			window.close(); 
+			unexpectedExit = true; 
 			break; 
 		case sf::Event::KeyPressed: 
 			if (event.key.code == sf::Keyboard::Escape)
-				window.close(); 
-			if (event.key.code == sf::Keyboard::P)
 				pause = true; 
 			break; 
 		default:
@@ -77,6 +77,7 @@ int Game::runGame(sf::RenderWindow& window)
 {
 	while (window.isOpen())
 	{
+		if (unexpectedExit) return 101;
 		if (!win)
 			update(window); 
 		render(window);
@@ -84,7 +85,7 @@ int Game::runGame(sf::RenderWindow& window)
 		if (isWin())
 		{
 			window.clear(sf::Color::Black); // RECHECK
-			if (level <= 5)
+			if (level < 5)
 			{
 				drawNextLevel(window);
 				sf::Clock clock;
@@ -100,7 +101,7 @@ int Game::runGame(sf::RenderWindow& window)
 				player->reset();
 				return runGame(window);
 			}
-			else if (level == 6)
+			else
 			{
 				drawWin(window);
 				return 20;
@@ -154,8 +155,8 @@ void Game::drawWin(sf::RenderWindow& window)
 	text.setFont(font);
 	text.setCharacterSize(40);
 	text.setFillColor(sf::Color::Red);
-	text.setString("YOU FINISH ALL LEVELS. THANKS FOR PLAYING OUR GAME");
-	text.setPosition(sf::Vector2f(200.0f, 500.0f));
+	text.setString("YOU HAVE FINISHED ALL LEVELS. THANKS FOR PLAYING OUR GAME!");
+	text.setPosition(sf::Vector2f(100.0f, 500.0f));
 	
 	sf::Text text2;
 	text2.setFont(font);

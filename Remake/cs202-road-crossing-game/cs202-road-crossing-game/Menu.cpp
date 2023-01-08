@@ -47,12 +47,12 @@ void Menu::pollEvents()
 		switch (event->type)
 		{
 		case sf::Event::Closed:
-			window->close();
+			exitGame();
 			break;
-		case sf::Event::KeyPressed:
-			if (event->key.code == sf::Keyboard::Escape)
-				window->close();
-			break;
+		// case sf::Event::KeyPressed:
+		// 	if (event->key.code == sf::Keyboard::Escape)
+		// 		window->close();
+		// 	break;
 		default:
 			break;
 		}
@@ -190,69 +190,25 @@ int Menu::newGame(const int& level)
 	if (t == 0)
 	{
 		int k = subMenu(lvl);
-		if (k == 0)
-			return newGame(lvl);
-		else if (k == 1)
-			return newGame(saveGame(lvl));
-		else if (k == 2)
-			return newGame(loadGame());
-		else if (k == 4)
-		{
-			switch (renderMain())
-			{
-			case 0:
-				return newGame();
-				break;
-			case 1:
-				return loadGame();
-				break;
-			case 2:
-				return rank(); //rank
-				break;
-			case 3: 
-				return instruction(); 
-				break; 
-			case 4:
-				return exitGame();
-				break;
-			default:
-				break;
-			}
+		switch (k) {
+			case 0: return newGame(lvl);
+			case 1: return newGame(saveGame(lvl));
+			case 2: return newGame(loadGame());
+			case 4: return show();
+			default: return 0;
 		}
 	}
-	else if (t == -1)
+	if (t == -1)
 	{
 		int k = loseMenu();
-		if (k == 0)
-			return newGame();
-		else if (k == 1)
-		{
-			switch (renderMain())
-			{
-			case 0:
-				return newGame();
-				break;
-			case 1:
-				return loadGame();
-				break;
-			case 2:
-				return rank(); //rank
-				break;
-			case 3: 
-				return instruction();
-				break; 
-			case 4:
-				return exitGame();
-				break;
-			default:
-				break;
-			}
-		}
+		if (k == 0) return newGame(0);
+		if (k == 1) return show();
+		return 0;
 	}
-	else if (t == 2)
-		return newGame(lvl);
-	else if (t == 20)
-		return renderMain();
+	if (t == 2) return newGame(lvl);
+	if (t == 20) return show();
+	if (t == 101) exitGame();
+	return 0;
 }
 
 int Menu::saveGame(const int& Level)
@@ -439,7 +395,7 @@ int Menu::loadLevel(const sf::String& name)
 						lvl += info[++i];
 					level = stoi(lvl);
 					fin.close();
-					std::cout << "Loaded account " << "\ " << account << "\ " << "successfully. \n";
+					std::cout << "Loaded account: " << account << " | " << "success. \n";
 					return level;
 				}
 			}
@@ -540,6 +496,7 @@ int Menu::subMenu(const int& clevel)
 
 		if (clock.getElapsedTime() >= time)
 		{
+			if (event->type == sf::Event::KeyPressed && event->key.code == sf::Keyboard::Escape) return 0;
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				for (int i = 0; i < 5; i++)
@@ -566,7 +523,7 @@ int Menu::loseMenu()
 {
 	std::cout << "loseMenu\n";
 	window->clear();
-	std::string menu[2] = { "TRY AGAIN", "QUIT" };
+	std::string menu[2] = { "TRY AGAIN", "BACK TO MENU" };
 	sf::Text crash;
 	std::vector <Button> menuButton;
 	sf::Font font;
@@ -574,13 +531,13 @@ int Menu::loseMenu()
 
 	crash.setPosition(sf::Vector2f(140, 190));
 	crash.setFont(font);
-	crash.setString("CRASHED");
+	crash.setString("CRASHED!");
 	crash.setCharacterSize(165);
 	crash.setFillColor(sf::Color::Red);
 
 	for (int i = 0; i < 2; i++)
 	{
-		sf::Vector2f pos(window->getSize().x / 2 + 160, i * 65 + 250);
+		sf::Vector2f pos(window->getSize().x / 2 + 200, i * 65 + 250);
 		Button a(menu[i], pos, sf::Color::Black, 24, pos);
 		a.setFont(font);
 		a.setPosition(pos);
@@ -633,7 +590,7 @@ int Menu::loadGame()
 	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black); 
 	text.setPosition(sf::Vector2f(350, 140)); 
 
-	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
+	Button instruction("ENTER YOUR NAME: (Press ESC to back to menu)", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
 	instruction.setFont(font);
 	instruction.setPosition(sf::Vector2f(350, 50));
 	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Red, 40, sf::Vector2f(125, 140));
@@ -657,12 +614,20 @@ int Menu::loadGame()
 					break;
 				}
 			}
+			if (event.type == sf::Event::KeyPressed) {
+				switch (event.key.code) {
+					case sf::Keyboard::Escape: return show(); // ESC -> back to menu
+					case sf::Keyboard::Return: // Enter -> Load
+						name = sentence.toAnsiString();
+						break;
+					default: {}
+				}
+			}
+
 			if (event.type == sf::Event::TextEntered)
 			{
-				if (event.text.unicode >= 32 && event.text.unicode <= 126)
-					sentence += (char)event.text.unicode;
-				else if (event.text.unicode == 8 && sentence.getSize() > 0)
-					sentence.erase(sentence.getSize() - 1);
+				if (event.text.unicode >= 32 && event.text.unicode <= 126) sentence += (char)event.text.unicode;
+				else if (event.text.unicode == 8 && sentence.getSize() > 0) sentence.erase(sentence.getSize() - 1);
 				text.setString(sentence);
 			}
 
@@ -727,67 +692,57 @@ int Menu::instruction()
 	sprite1.setScale(sf::Vector2f(0.9f, 0.9f)); 
 	sprite1.setPosition(sf::Vector2f(830.0f, 180.0f)); 
 	
-	std::string line[7] = { "Use A,W,S,D to move the characters avoid the obstacles.",
+	std::string line[8] = { "Use A,W,S,D to move the characters avoid the obstacles, ESC to pause.",
 						   "When you finish the final level, all of data will reset.",
 							"Use mouseclick to choose the options in menu lists.",
 							"Turning on/off the music as you want", "Save/Load the game that you may miss.", 
-							"GOOD LUCK", "INSTRUCTION"};
+							"GOOD LUCK", "INSTRUCTION", "Press Enter to go back to menu"};
 	
-	sf::Text text[7]; sf::Font font; font.loadFromFile("Sugar Snow.ttf"); 
-	for (int i = 0; i < 7; i++)
+	sf::Text text[8]; sf::Font font; font.loadFromFile("Sugar Snow.ttf"); 
+	for (int i = 0; i < 8; i++)
 	{
-		text[i].setFont(font);
-		text[i].setString(line[i]);
-		if (i <= 5)
-		{
-			text[i].setCharacterSize(35);
-			text[i].setPosition(sf::Vector2f(30, 180 + (i + 1) * 50));
-			text[i].setFillColor(sf::Color::Red);
+		sf::Text *textLine = &text[i];
+		textLine->setFont(font);
+		textLine->setString(line[i]);
+		sf::Color lineColor;
+		int lineSize;
+		sf::Vector2f linePosition;
+		switch (i) {
+			case 6:
+				lineColor = sf::Color(4, 68, 43);
+				lineSize = 50;
+				linePosition = sf::Vector2f(500.0f, 80.0f);
+				break;
+			case 7:
+				lineColor = sf::Color::Black;
+				lineSize = 40;
+				linePosition = sf::Vector2f(300.0f, 600.0f);
+				break;
+			default:
+				lineColor = sf::Color::Red;
+				lineSize = 35;
+				linePosition = sf::Vector2f(30, 180 + (i + 1) * 50);
 		}
-		else
-		{
-			text[i].setFillColor(sf::Color(4, 68, 43));
-			text[i].setCharacterSize(50);
-			text[i].setPosition(sf::Vector2f(500.0f, 80.0f));
-		}
+		textLine->setFillColor(lineColor);
+		textLine->setCharacterSize(lineSize);
+		textLine->setPosition(linePosition);
+	}
+
+	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false &&  window->isOpen())
+	{
+		window->draw(sprite);
+		window->draw(sprite1);
+		for (int i = 0; i < 8; i++) window->draw(text[i]); 
+		window->display();
 	}
 	
-	window->draw(sprite);
-	window->draw(sprite1);
-	for (int i = 0; i < 7; i++) window->draw(text[i]); 
-	window->display();
-	
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false)
-	{
-		pollEvents();
-	}
-	switch (renderMain())
-	{
-	case 0:
-		return newGame();
-		break;
-	case 1:
-		return loadGame();
-		break;
-	case 2:
-		return rank();
-		break;
-	case 4:
-		return instruction();
-		break;
-	case 5:
-		return exitGame();
-		break;
-	default:
-		break;
-	}
-	return 30;
+	return show();
 }
 
 int Menu::rank()
 {
 	std::cout << "rank\n"; 
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false && window->isOpen())
+	while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && window->isOpen())
 	{
 		window->clear();
 		std::vector<std::string> info;
@@ -818,8 +773,8 @@ int Menu::rank()
 
 		if (!fin.is_open())
 		{
-			std::cout << "Can't open file\n"; 
-			window->close(); //RECHECK 
+			std::cout << "Can't open file\n";
+			exitGame(); //RECHECK 
 		}
 		else
 		{
@@ -904,25 +859,24 @@ int Menu::rank()
 		window->display();
 	}
 
+	return show();
+}
+
+int Menu::show() {
 	switch (renderMain())
 	{
 	case 0:
-		return newGame();
-		break;
+		return newGame(0);
 	case 1:
 		return loadGame();
-		break;
 	case 2:
 		return rank();
-		break;
-	case 3: 
+	case 4: 
 		return instruction();
-		break;
-	case 4:
+	case 5:
 		return exitGame();
-		break;
 	default:
-		break;
+		return -1;
 	}
 }
 

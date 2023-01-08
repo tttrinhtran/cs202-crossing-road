@@ -29,6 +29,7 @@ public:
 	Menu();
 	virtual ~Menu();
 
+	int show();
 	void pollEvents();
 	void play_sound();
 	std::string set_sound();
@@ -48,3 +49,4 @@ public:
 	int instruction();
 };
 
+// #include "Menu.cpp"
