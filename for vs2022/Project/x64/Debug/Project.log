@@ -1,0 +1,96 @@
+﻿  Button.cpp
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Button.cpp(52,10): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Button.cpp(53,10): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=int
+          ]
+  Candy.cpp
+  Game.cpp
+  Ginger.cpp
+  Main.cpp
+  Menu.cpp
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(76,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(126,52): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(442,40): warning C4129: ' ': unrecognized character escape sequence
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(442,59): warning C4129: ' ': unrecognized character escape sequence
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(523,58): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(523,44): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(583,58): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(583,44): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(744,45): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(885,46): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(886,42): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(887,40): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Obstacle.cpp
+  PineTree.cpp
+  Player.cpp
+  Reindeer.cpp
+  Snowfall.cpp
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Snowfall.cpp(15,34): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  TrafficLane.cpp
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\TrafficLane.cpp(55,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\TrafficLane.cpp(57,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\TrafficLane.cpp(103,47): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  TrafficLight.cpp
+  Wood.cpp
+  Generating Code...
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(256): warning C4715: 'Menu::newGame': not all control paths return a value
+C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\Project\Menu.cpp(925): warning C4715: 'Menu::rank': not all control paths return a value
+  Project.vcxproj -> C:\Users\Admin\Desktop\project\cs202-crossing-road\for vs2022\x64\Debug\Project.exe

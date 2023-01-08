@@ -1,4 +1,0 @@
-﻿  cGame.cpp
-C:\Users\Admin\Desktop\project\cs202-crossing-road\Dinh_test\test\cGame.cpp(72,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Admin\Desktop\project\cs202-crossing-road\Dinh_test\test\cGame.cpp(132,12): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
-  test.vcxproj -> C:\Users\Admin\Desktop\project\cs202-crossing-road\Dinh_test\x64\Debug\test.exe
