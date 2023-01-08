@@ -155,7 +155,7 @@ void Game::drawWin(sf::RenderWindow& window)
 	text.setFont(font);
 	text.setCharacterSize(40);
 	text.setFillColor(sf::Color::Red);
-	text.setString("YOU HAVE FINISHED ALL LEVELS. THANKS FOR PLAYING OUR GAME!");
+	text.setString("YOU HAVE FINISHED ALL LEVELS! PRESS ENTER TO PROCEED");
 	text.setPosition(sf::Vector2f(100.0f, 500.0f));
 	
 	sf::Text text2;
