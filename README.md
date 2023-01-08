@@ -22,7 +22,7 @@ Traffic lights to reduce game difficulty
 
 # Usage
 
-You just need to press the keys: AWDS to make your character move left, up, right, down.
+You just need to press the keys: WASD to make your character move left, right, up or down.
 
 # Member
 Phạm Gia Thịnh
