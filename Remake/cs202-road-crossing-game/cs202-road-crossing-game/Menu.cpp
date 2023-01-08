@@ -1,4 +1,4 @@
-#include "Menu.h"
+// #include "Menu.h"
 #include "Button.h"
 
 void Menu::initVariables()
@@ -307,7 +307,8 @@ int Menu::saveGame(const int& Level, std::string fileName, std::string additiona
 		while (std::getline(fin, info))
 		{
 			if (info == "") continue;
-			for (int i = 0; i < info.length(); i++)
+			int i = 0;
+			for (; i < info.length(); i++)
 			{
 				if (info[i] != ',')
 					acc += info[i];
@@ -324,6 +325,7 @@ int Menu::saveGame(const int& Level, std::string fileName, std::string additiona
 				userExists = true;
 				level = Level;
 			}
+			else if (i == info.length() || level < 0) continue;
 
 			list.push_back(make_pair(acc, level));
 
@@ -332,6 +334,10 @@ int Menu::saveGame(const int& Level, std::string fileName, std::string additiona
 			info.clear();
 		}
 		fin.close();
+	}
+
+	for (int i = 0; i < name.length(); ++i) {
+		if (name[i] == ',') name[i] = '.';
 	}
 
 	if (userExists) fout.open(fileName);
@@ -658,6 +664,10 @@ int Menu::loadGame()
 		window->clear();
 	}
 
+	for (int i = 0; i < name.length(); ++i) {
+		if (name[i] == ',') name[i] = '.';
+	}
+
 	return newGame(loadLevel(name));
 }
 
@@ -805,7 +815,8 @@ int Menu::rank()
 		{
 			if (infoLine == "") continue;
 			std::cout << "infoLine.length(): " << infoLine.length() << '\n';
-			for (int i = 0; i < infoLine.length(); i++)
+			int i = 0;
+			for (; i < infoLine.length(); i++)
 			{
 				if (infoLine[i] != ',')
 					acc += infoLine[i];
@@ -818,6 +829,8 @@ int Menu::rank()
 					break;
 				}
 			}
+
+			if (i == infoLine.length() || l < 0) continue;
 
 			level.push_back(l);
 			info.push_back(acc);
