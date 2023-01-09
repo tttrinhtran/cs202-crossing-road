@@ -62,6 +62,11 @@ bool Menu::pollEvents(sf::Event &event, bool forceReturn)
 	return false;
 }
 
+void Menu::clearTextFieldBuffer() {
+	sf::Event event;
+	while (pollEvents(event, true)) {}
+}
+
 void Menu::play_sound()
 {
 	if (bgMusic)
@@ -253,6 +258,7 @@ int Menu::saveGame(const int& Level, std::string fileName, std::string additiona
 
 	sf::Event event;
 	bool submitted = false;
+	clearTextFieldBuffer();
 	while (window->isOpen() && !submitted)
 	{
 		while (pollEvents(event, true)) {
@@ -624,6 +630,8 @@ int Menu::loadGame()
 
 	sf::Event event;
 	bool submitted = false;
+	clearTextFieldBuffer();
+
 	while (window->isOpen() && !submitted)
 	{
 		while (pollEvents(event, true)) {
@@ -954,5 +962,4 @@ inline void Menu::swap(T& a, T& b)
 	a = b;
 	b = tmp;
 }
-
 

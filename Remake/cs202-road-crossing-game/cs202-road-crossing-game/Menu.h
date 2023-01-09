@@ -19,7 +19,7 @@ private:
 	sf::Texture bgTexture; 
 	sf::Sprite bgSprite; 
 	sf::Music sound; 
-	bool bgMusic; 
+	bool bgMusic;
 
 	Game* game = nullptr; 
 	Snowfall snowfall;
@@ -53,6 +53,8 @@ public:
 	int instruction();
 
 	int textField(sf::Event event, sf::String &sentence);
+
+	void clearTextFieldBuffer();
 };
 
 // #include "Menu.cpp"
