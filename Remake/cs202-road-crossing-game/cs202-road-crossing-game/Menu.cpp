@@ -243,7 +243,7 @@ int Menu::saveGame(const int& Level, std::string fileName, std::string additiona
 
 	Button instruction(additionalInfo + " ENTER YOUR NAME: (Press ESC to skip)", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
 	instruction.setFont(font);
-	instruction.setPosition(sf::Vector2f(350, 50));
+	instruction.setPosition(sf::Vector2f(250.0f, 50.0f));
 	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Red, 40, sf::Vector2f(125, 140));
 	textBox.setFont(font);
 	textBox.setPosition(sf::Vector2f(125, 140));
@@ -469,6 +469,7 @@ int Menu::subMenu(const int& clevel)
 	2 : music
 	3 : exit */
 	std::string menu[5] = { "RESUME", "SAVE GAME", "LOAD GAME", "MUSIC: ON", "BACK TO MAIN MENU" }; // RECHECK :  add music -> resize = 4
+	if (!bgMusic) menu[3] = "MUSIC: OFF";
 
 	// RECHECK: add music : menu[2] = music (on/off) 
 	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
@@ -856,13 +857,9 @@ int Menu::rank()
 				}
 			}
 		}
-	} 
-	while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && window->isOpen())
-	{
-		sf::Event event;
-		pollEvents(event, false);
+	}
 
-		window->clear();
+	window->clear();
 		std::vector<std::pair<Button, Button>> box;
 		std::vector<Button> num;
 		sf::Texture texture; texture.loadFromFile("pic/background.png");
@@ -915,6 +912,13 @@ int Menu::rank()
 			num[i].render(*window);
 		}
 		window->display();
+
+	while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && window->isOpen())
+	{
+		sf::Event event;
+		pollEvents(event, false);
+
+		
 	}
 
 	return show();

@@ -13,3 +13,4 @@ bool Wood::checkType()
 {
 	return false;
 }
+

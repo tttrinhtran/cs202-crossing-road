@@ -20,6 +20,8 @@ private:
 	bool pause; 
 	bool win; 
 
+	bool unexpectedExit;
+
 public:
 	Game(); 
 	virtual ~Game(); 
@@ -41,3 +43,4 @@ public:
 	void render(sf::RenderWindow& window); 
 };
 
+// #include "Game.cpp"

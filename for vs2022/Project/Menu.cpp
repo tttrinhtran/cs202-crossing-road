@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "Button.h"
+
 void Menu::initVariables()
 {
 	event = new sf::Event;
@@ -10,7 +11,7 @@ void Menu::initWindow()
 {
 	videoMode.width = 1280;
 	videoMode.height = 720;
-	window = new sf::RenderWindow(videoMode, "Crossing Road", sf::Style::Close | sf::Style::Titlebar);
+	window = new sf::RenderWindow(videoMode, "The Santa's Crossing Road", sf::Style::Close | sf::Style::Titlebar);
 	window->setFramerateLimit(60);
 }
 
@@ -40,23 +41,25 @@ Menu::~Menu() {
 	delete game;
 }
 
-void Menu::pollEvents()
+bool Menu::pollEvents(sf::Event &event, bool forceReturn)
 {
-	while (window->pollEvent(*event))
+	while (window->pollEvent(event))
 	{
-		switch (event->type)
+		switch (event.type)
 		{
-		case sf::Event::Closed:
-			window->close();
-			break;
-		case sf::Event::KeyPressed:
-			if (event->key.code == sf::Keyboard::Escape)
-				window->close();
-			break;
-		default:
-			break;
+			case sf::Event::Closed:
+				exitGame();
+				return false;
+			// case sf::Event::KeyPressed:
+			// 	if (event->key.code == sf::Keyboard::Escape)
+			// 		window->close();
+			// 	break;
+			default:
+				if (forceReturn) return true;
 		}
 	}
+
+	return false;
 }
 
 void Menu::play_sound()
@@ -117,7 +120,7 @@ int Menu::renderMain()
 	sf::Sprite sp1; sp1.setTexture(tt1); 
 	sp1.setPosition(sf::Vector2f(850.0f, 280.0f));
 
-	std::string txt[2] = { "CROSSING ROAD", "MADE BY GROUP 05" }; 
+	std::string txt[2] = { "THE SANTA'S CROSSING ROAD", "MADE BY GROUP 05" }; 
 	sf::Text text[2];  
 	for (int i = 0; i < 2; i++)
 	{
@@ -130,8 +133,8 @@ int Menu::renderMain()
 
 	while (window->isOpen())
 	{
-		pollEvents();
-
+		sf::Event event;
+		pollEvents(event, false);
 		//renderBackground(*window);
 		window->draw(bgSprite);
 		snowfall.update(*window);
@@ -187,75 +190,42 @@ int Menu::newGame(const int& level)
 	window->draw(sprite);
 	window->display();
 
-	if (t == 0)
+	while (t == 0)
 	{
 		int k = subMenu(lvl);
-		if (k == 0)
-			return newGame(lvl);
-		else if (k == 1)
-			return newGame(saveGame(lvl));
-		else if (k == 2)
-			return newGame(loadGame());
-		else if (k == 4)
-		{
-			switch (renderMain())
-			{
-			case 0:
-				return newGame();
-				break;
-			case 1:
-				return loadGame();
-				break;
-			case 2:
-				return rank(); //rank
-				break;
-			case 3: 
-				return instruction(); 
-				break; 
-			case 4:
-				return exitGame();
-				break;
-			default:
-				break;
-			}
+		switch (k) {
+			case 0: return newGame(lvl);
+			case 1: saveGame(lvl, "loadGame.txt", "", false); break;
+			case 2: return newGame(loadGame());
+			case 4: return show();
+			default: return 0;
 		}
 	}
-	else if (t == -1)
+	bool user_saved = false;
+	while (t == -1)
 	{
-		int k = loseMenu();
-		if (k == 0)
-			return newGame();
-		else if (k == 1)
-		{
-			switch (renderMain())
-			{
-			case 0:
-				return newGame();
-				break;
-			case 1:
-				return loadGame();
-				break;
-			case 2:
-				return rank(); //rank
-				break;
-			case 3: 
-				return instruction();
-				break; 
-			case 4:
-				return exitGame();
-				break;
-			default:
-				break;
-			}
+		if (!user_saved) {
+			if (lvl > 0) saveGame(lvl, "loadRank.txt", "YOU LOSE!", true);
+			user_saved = true;
+			continue;
+		}
+		else {
+			int k = loseMenu();
+			if (k == 0) return newGame(0);
+			if (k == 1) return show();
+			return 0;
 		}
 	}
-	else if (t == 2)
-		return newGame(lvl);
-	else if (t == 20)
-		return renderMain();
+	if (t == 2) return newGame(lvl);
+	if (t == 20) {
+		saveGame(lvl, "loadRank.txt", "YOU WIN!", true);
+		return show();
+	}
+	if (t == 101) exitGame();
+	return 0;
 }
 
-int Menu::saveGame(const int& Level)
+int Menu::saveGame(const int& Level, std::string fileName, std::string additionalInfo, bool allowDup)
 {
 	std::cout << "saveGame\n";
 	window->clear();
@@ -271,9 +241,9 @@ int Menu::saveGame(const int& Level)
 	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
 	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black); text.setPosition(sf::Vector2f(150, 150));
 
-	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
+	Button instruction(additionalInfo + " ENTER YOUR NAME: (Press ESC to skip)", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
 	instruction.setFont(font);
-	instruction.setPosition(sf::Vector2f(350, 50));
+	instruction.setPosition(sf::Vector2f(250.0f, 50.0f));
 	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Red, 40, sf::Vector2f(125, 140));
 	textBox.setFont(font);
 	textBox.setPosition(sf::Vector2f(125, 140));
@@ -281,28 +251,33 @@ int Menu::saveGame(const int& Level)
 	enter.setFont(font);
 	enter.setPosition(sf::Vector2f(840, 140));
 
-
-	while (window->isOpen() && name.length() == 0)
+	sf::Event event;
+	bool submitted = false;
+	while (window->isOpen() && !submitted)
 	{
-		sf::Event event;
-		while (window->pollEvent(event))
-		{
+		while (pollEvents(event, true)) {
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				if (enter.mouseClick(*window))
 				{
 					name = sentence.toAnsiString();
+					if (name.length() > 0) {
+						submitted = true;
+						break;
+					}
+				}
+			}
+
+			int proc = textField(event, sentence);
+			if (proc == 1) {
+				name = sentence.toAnsiString();
+				if (name.length() > 0) {
+					submitted = true;
 					break;
 				}
 			}
-			if (event.type == sf::Event::TextEntered)
-			{
-				if (event.text.unicode >= 32 && event.text.unicode <= 126)
-					sentence += (char)event.text.unicode;
-				else if (event.text.unicode == 8 && sentence.getSize() > 0) // backspace
-					sentence.erase(sentence.getSize() - 1);
-				text.setString(sentence);
-			}
+			if (proc == -1) return -1;
+			if (proc == 2) text.setString(sentence);
 		}
 
 		window->draw(sprite);
@@ -316,54 +291,57 @@ int Menu::saveGame(const int& Level)
 		window->clear();
 	}
 
-
 	std::ofstream fout;
-	std::ifstream fin;
 
-	fin.open("loadGame.txt");
-	/*if (!fin.is_open())
-		std::cout << "Couldn't open load file" << std::endl;
-	else
-	{*/
 	std::vector<std::pair<std::string, int>> list;
-	int level;
-	std::string info;
-	std::string acc;
-	std::string lvl;
-	bool check = false;
+	bool userExists = false;
 
-	while (fin >> info)
-	{
-		for (int i = 0; i < info.length(); i++)
+	if (!allowDup) {
+		std::ifstream fin;
+		fin.open(fileName);
+		int level;
+		std::string info;
+		std::string acc;
+		std::string lvl;
+
+		while (std::getline(fin, info))
 		{
-			if (info[i] != ',')
-				acc += info[i];
-			else
+			if (info == "") continue;
+			int i = 0;
+			for (; i < info.length(); i++)
 			{
-				while (i + 1 < info.length())
-					lvl += info[++i];
-				level = stoi(lvl);
-				break;
+				if (info[i] != ',')
+					acc += info[i];
+				else
+				{
+					while (i + 1 < info.length())
+						lvl += info[++i];
+					level = stoi(lvl);
+					break;
+				}
 			}
+
+			if (acc == name) {
+				userExists = true;
+				level = Level;
+			}
+			else if (i == info.length() || level < 0) continue;
+
+			list.push_back(make_pair(acc, level));
+
+			acc.clear();
+			lvl.clear();
+			info.clear();
 		}
-
-		if (acc == name) {
-			check = true;
-			level = Level;
-		}
-
-		list.push_back(make_pair(acc, level));
-
-		acc.clear();
-		lvl.clear();
-		info.clear();
+		fin.close();
 	}
-	fin.close();
 
-	if (check == false)
-		fout.open("loadGame.txt");
-	else
-		fout.open("loadGame.txt", std::ios::app);
+	for (int i = 0; i < name.length(); ++i) {
+		if (name[i] == ',') name[i] = '.';
+	}
+
+	if (userExists) fout.open(fileName);
+	else fout.open(fileName, std::ios::app);
 
 	if (!fout.is_open())
 	{
@@ -371,18 +349,10 @@ int Menu::saveGame(const int& Level)
 	}
 	else
 	{
-		if (check)
-		{
-			/*for (int i = 0; i < list.size(); i++)
-			{
-				fout << list[i].first << ',' << list[i].second << '\n';
-			}*/
-
-			for (auto i = list.begin(); i != list.end(); i++)
-				fout << i->first << ',' << i->second << '\n';
+		if (userExists) {
+			for (auto i : list) fout << i.first << ',' << i.second << '\n';
 		}
-		else
-			fout << name << ',' << Level << '\n';
+		else fout << '\n' << name << ',' << Level;
 		fout.close();
 	}
 		
@@ -427,8 +397,9 @@ int Menu::loadLevel(const sf::String& name)
 	}
 	else
 	{
-		while (fin >> info)
+		while (std::getline(fin, info))
 		{
+			if (info == "") continue;
 			for (int i = 0; i < info.length(); i++)
 			{
 				if (info[i] != ',')
@@ -439,7 +410,7 @@ int Menu::loadLevel(const sf::String& name)
 						lvl += info[++i];
 					level = stoi(lvl);
 					fin.close();
-					std::cout << "Loaded account " << "\ " << account << "\ " << "successfully. \n";
+					std::cout << "Loaded account: " << account << " | " << "success. \n";
 					return level;
 				}
 			}
@@ -449,7 +420,7 @@ int Menu::loadLevel(const sf::String& name)
 	}
 
 	fout.open("loadGame.txt", std::ios::app);
-	fout << "autosave," << 1 << std::endl;
+	fout << "\nautosave," << 1 << std::endl;
 	fout.close();
 	
 	//display 
@@ -497,7 +468,8 @@ int Menu::subMenu(const int& clevel)
 	1 : save game
 	2 : music
 	3 : exit */
-	std::string menu[5] = { "RESUME", "SAVE GAME", "LOAD GAME", "MUSIC: ON", "EXIT" }; // RECHECK :  add music -> resize = 4
+	std::string menu[5] = { "RESUME", "SAVE GAME", "LOAD GAME", "MUSIC: ON", "BACK TO MAIN MENU" }; // RECHECK :  add music -> resize = 4
+	if (!bgMusic) menu[3] = "MUSIC: OFF";
 
 	// RECHECK: add music : menu[2] = music (on/off) 
 	sf::Font font; font.loadFromFile("Sugar Snow.TTF");
@@ -529,7 +501,11 @@ int Menu::subMenu(const int& clevel)
 
 	while (window->isOpen())
 	{
-		pollEvents();
+		sf::Event event;
+		while (pollEvents(event, true)) {
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) return 0;
+		}
+
 		window->draw(sprite);
 		for (int i = 0; i < 5; i++)
 		{
@@ -566,7 +542,7 @@ int Menu::loseMenu()
 {
 	std::cout << "loseMenu\n";
 	window->clear();
-	std::string menu[2] = { "TRY AGAIN", "QUIT" };
+	std::string menu[2] = { "TRY AGAIN", "BACK TO MENU" };
 	sf::Text crash;
 	std::vector <Button> menuButton;
 	sf::Font font;
@@ -574,32 +550,36 @@ int Menu::loseMenu()
 
 	crash.setPosition(sf::Vector2f(140, 190));
 	crash.setFont(font);
-	crash.setString("CRASHED");
+	crash.setString("CRASHED!");
 	crash.setCharacterSize(165);
 	crash.setFillColor(sf::Color::Red);
 
 	for (int i = 0; i < 2; i++)
 	{
-		sf::Vector2f pos(window->getSize().x / 2 + 160, i * 65 + 250);
+		sf::Vector2f pos(window->getSize().x / 2 + 200, i * 65 + 250);
 		Button a(menu[i], pos, sf::Color::Black, 24, pos);
 		a.setFont(font);
 		a.setPosition(pos);
 		menuButton.push_back(a);
 	}
-	window->clear(); 
-
-	sf::Texture texture; texture.loadFromFile("pic/background.png"); 
-	sf::Sprite sprite; sprite.setTexture(texture); 
-	window->draw(sprite);
 
 	while (window->isOpen())
 	{
-		pollEvents();
+		sf::Event dummyEvent;
+		pollEvents(dummyEvent, false);
+
+		window->clear(); 
+
+		sf::Texture texture; texture.loadFromFile("pic/background.png"); 
+		sf::Sprite sprite; sprite.setTexture(texture); 
+		window->draw(sprite);
+
 		for (int i = 0; i < 2; i++)
 		{
 			menuButton[i].render(*window);
 		}
 		window->draw(crash);
+
 		window->display();
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -610,7 +590,6 @@ int Menu::loseMenu()
 					return i;
 			}
 		}
-
 		for (int i = 0; i < 2; i++)
 			menuButton[i].mouseClick(*window);
 	}
@@ -633,7 +612,7 @@ int Menu::loadGame()
 	sf::Text text(sentence, font, 40); text.setFillColor(sf::Color::Black); 
 	text.setPosition(sf::Vector2f(350, 140)); 
 
-	Button instruction("ENTER YOUR NAME: ", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
+	Button instruction("ENTER YOUR NAME: (Press ESC to back to menu)", sf::Vector2f(350, 50), sf::Color::Red, 40, sf::Vector2f(350, 50));
 	instruction.setFont(font);
 	instruction.setPosition(sf::Vector2f(350, 50));
 	Button textBox("     ", sf::Vector2f(125, 140), sf::Color::Red, 40, sf::Vector2f(125, 140));
@@ -643,43 +622,83 @@ int Menu::loadGame()
 	enter.setFont(font);
 	enter.setPosition(sf::Vector2f(840, 140));
 
-
-	while (window->isOpen() && name.length() == 0)
+	sf::Event event;
+	bool submitted = false;
+	while (window->isOpen() && !submitted)
 	{
-		sf::Event event;
-		while (window->pollEvent(event))
-		{
+		while (pollEvents(event, true)) {
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				if (enter.mouseClick(*window))
 				{
 					name = sentence.toAnsiString();
+					if (name.length() > 0) {
+						submitted = true;
+						break;
+					}
+				}
+			}
+
+			int proc = textField(event, sentence);
+			if (proc == 1) {
+				name = sentence.toAnsiString();
+				if (name.length() > 0) {
+					submitted = true;
 					break;
 				}
 			}
-			if (event.type == sf::Event::TextEntered)
-			{
-				if (event.text.unicode >= 32 && event.text.unicode <= 126)
-					sentence += (char)event.text.unicode;
-				else if (event.text.unicode == 8 && sentence.getSize() > 0)
-					sentence.erase(sentence.getSize() - 1);
-				text.setString(sentence);
-			}
+			if (proc == -1) return show();
+			if (proc == 2) text.setString(sentence);
+		}
 
-			window->draw(sprite);
-			instruction.render(*window);
-			textBox.render(*window);
-			enter.render(*window);
+		
+		window->draw(sprite);
+		instruction.render(*window);
+		textBox.render(*window);
+		enter.render(*window);
 
 
-			enter.mouseClick(*window);
+		enter.mouseClick(*window);
 
-			window->draw(text);
-			window->display();
-			window->clear();
+		window->draw(text);
+		window->display();
+		window->clear();
+	}
+
+	for (int i = 0; i < name.length(); ++i) {
+		if (name[i] == ',') name[i] = '.';
+	}
+
+	return newGame(loadLevel(name));
+}
+
+int Menu::textField(sf::Event event, sf::String &sentence) {
+	if (event.type == sf::Event::KeyPressed) {
+		switch (event.key.code) {
+			case sf::Keyboard::Escape:
+				return -1; // ESC -> back to menu
+			// case sf::Keyboard::Return:
+			case sf::Keyboard::Enter:
+				return 1; // Enter -> Load
+			case sf::Keyboard::Backspace:
+			case sf::Keyboard::Delete:
+				if (sentence.getSize() > 0) sentence.erase(sentence.getSize() - 1);
+				return 2;
+			default:
+				return 0;
 		}
 	}
-	return newGame(loadLevel(name));
+
+	if (event.type == sf::Event::TextEntered) {
+		if (32 <= event.text.unicode && event.text.unicode < 126) sentence += (char)event.text.unicode;
+		return 2;
+	}
+
+	return 0;
+	// -1: ESC
+	// 0: Nothing
+	// 1: submitted
+	// 2: text change
 }
 
 int Menu::exitGame()
@@ -687,7 +706,6 @@ int Menu::exitGame()
 	std::cout << "exitGame\n";
 
 	bgMusic = !bgMusic; 
-	play_sound();
 	window->clear();
 	sf::Texture texture; texture.loadFromFile("pic/bye.png"); 
 	sf::Sprite sprite; sprite.setTexture(texture); 
@@ -703,7 +721,8 @@ int Menu::exitGame()
 	m.openFromFile("sound/merry-christmas.ogg"); 
 	m.setVolume(100);
 	m.setLoop(0);
-	m.play(); 
+	m.play();
+	
 	sf::sleep(sf::seconds(4.0f));
 
 
@@ -727,72 +746,120 @@ int Menu::instruction()
 	sprite1.setScale(sf::Vector2f(0.9f, 0.9f)); 
 	sprite1.setPosition(sf::Vector2f(830.0f, 180.0f)); 
 	
-	std::string line[7] = { "Use A,W,S,D to move the characters avoid the obstacles.",
+	std::string line[8] = { "Use A,W,S,D to move the characters avoid the obstacles, ESC to pause.",
 						   "When you finish the final level, all of data will reset.",
 							"Use mouseclick to choose the options in menu lists.",
 							"Turning on/off the music as you want", "Save/Load the game that you may miss.", 
-							"GOOD LUCK", "INSTRUCTION"};
+							"GOOD LUCK", "INSTRUCTION", "Press Enter to go back to menu"};
 	
-	sf::Text text[7]; sf::Font font; font.loadFromFile("Sugar Snow.ttf"); 
-	for (int i = 0; i < 7; i++)
+	sf::Text text[8]; sf::Font font; font.loadFromFile("Sugar Snow.ttf"); 
+	for (int i = 0; i < 8; i++)
 	{
-		text[i].setFont(font);
-		text[i].setString(line[i]);
-		if (i <= 5)
-		{
-			text[i].setCharacterSize(35);
-			text[i].setPosition(sf::Vector2f(30, 180 + (i + 1) * 50));
-			text[i].setFillColor(sf::Color::Red);
+		sf::Text *textLine = &text[i];
+		textLine->setFont(font);
+		textLine->setString(line[i]);
+		sf::Color lineColor;
+		int lineSize;
+		sf::Vector2f linePosition;
+		switch (i) {
+			case 6:
+				lineColor = sf::Color(4, 68, 43);
+				lineSize = 50;
+				linePosition = sf::Vector2f(500.0f, 80.0f);
+				break;
+			case 7:
+				lineColor = sf::Color::Black;
+				lineSize = 40;
+				linePosition = sf::Vector2f(300.0f, 600.0f);
+				break;
+			default:
+				lineColor = sf::Color::Red;
+				lineSize = 35;
+				linePosition = sf::Vector2f(30, 180 + (i + 1) * 50);
 		}
-		else
-		{
-			text[i].setFillColor(sf::Color(4, 68, 43));
-			text[i].setCharacterSize(50);
-			text[i].setPosition(sf::Vector2f(500.0f, 80.0f));
-		}
+		textLine->setFillColor(lineColor);
+		textLine->setCharacterSize(lineSize);
+		textLine->setPosition(linePosition);
 	}
 
 	window->draw(sprite);
 	window->draw(sprite1);
-	for (int i = 0; i < 7; i++) window->draw(text[i]); 
+	for (int i = 0; i < 8; i++) window->draw(text[i]); 
 	window->display();
-	
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false)
-	{
-		pollEvents();
-	}
 
-	switch (renderMain())
+	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false &&  window->isOpen())
 	{
-	case 0:
-		return newGame();
-		break;
-	case 1:
-		return loadGame();
-		break;
-	case 2:
-		return rank();
-		break;
-	case 4:
-		return instruction();
-		break;
-	case 5:
-		return exitGame();
-		break;
-	default:
-		break;
+		sf::Event event;
+		pollEvents(event, false);
 	}
-	return 30;
+	
+	return show();
 }
 
 int Menu::rank()
 {
-	std::cout << "rank\n"; 
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) == false && window->isOpen())
+	std::cout << "rank\n";
+	std::ifstream fin;
+
+	std::vector<std::string> info;
+	std::vector<int> level;
+	fin.open("loadRank.txt", std::ios::in);
+
+	if (fin.is_open())
 	{
-		window->clear();
-		std::vector<std::string> info;
-		std::vector<int> level;
+		std::cout << "can open file\n"; 
+		std::string infoLine;
+		std::string acc;
+		std::string levelStr;
+		int l;
+		while (std::getline(fin, infoLine))
+		{
+			if (infoLine == "") continue;
+			std::cout << "infoLine.length(): " << infoLine.length() << '\n';
+			int i = 0;
+			for (; i < infoLine.length(); i++)
+			{
+				if (infoLine[i] != ',')
+					acc += infoLine[i];
+				else
+				{
+					while (i + 1 < infoLine.length())
+						levelStr += infoLine[++i];
+
+					l = stoi(levelStr);
+					break;
+				}
+			}
+
+			if (i == infoLine.length() || l < 0) continue;
+
+			level.push_back(l);
+			info.push_back(acc);
+
+			acc.clear();
+			infoLine.clear();
+			levelStr.clear();
+		}
+		fin.close();
+	}
+	std::cout << "sort\n";
+	//sort
+	if (level.size())
+	{
+		for (int i = 0; i < level.size() - 1; i++)
+		{
+			for (int j = i + 1; j < level.size(); j++)
+			{
+				if (level.at(j) > level.at(i))
+				{
+					swap(level.at(i), level.at(j));
+					swap(info.at(i), info.at(j));
+				}
+			}
+		}
+	}
+
+	window->clear();
 		std::vector<std::pair<Button, Button>> box;
 		std::vector<Button> num;
 		sf::Texture texture; texture.loadFromFile("pic/background.png");
@@ -813,64 +880,6 @@ int Menu::rank()
 
 		window->draw(esc);
 
-
-		std::ifstream fin;
-		fin.open("loadGame.txt", std::ios::in);
-
-		if (!fin.is_open())
-		{
-			std::cout << "Can't open file\n"; 
-			window->close(); //RECHECK 
-		}
-		else
-		{
-			std::cout << "can open file\n"; 
-			std::string infoLine;
-			std::string acc;
-			std::string levelStr;
-			int l;
-			while (fin >> infoLine)
-			{
-				std::cout << "infoLine.length(): " << infoLine.length() << '\n';
-				for (int i = 0; i < infoLine.length(); i++)
-				{
-					if (infoLine[i] != ',')
-						acc += infoLine[i];
-					else
-					{
-						while (i + 1 < infoLine.length())
-							levelStr += infoLine[++i];
-
-						l = stoi(levelStr);
-						break;
-					}
-				}
-
-				level.push_back(l);
-				info.push_back(acc);
-
-				acc.clear();
-				infoLine.clear();
-				levelStr.clear();
-			}
-			fin.close();
-		}
-		std::cout << "sort\n";
-		//sort
-		if (level.size())
-		{
-			for (int i = 0; i < level.size() - 1; i++)
-			{
-				for (int j = i + 1; j < level.size(); j++)
-				{
-					if (level.at(j) > level.at(i))
-					{
-						swap(level.at(i), level.at(j));
-						swap(info.at(i), info.at(j));
-					}
-				}
-			}
-		}
 		std::cout << "display\n"; 
 		//display
 		for (int i = 0; i < level.size(); i++)
@@ -903,28 +912,38 @@ int Menu::rank()
 			num[i].render(*window);
 		}
 		window->display();
+
+	while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && window->isOpen())
+	{
+		sf::Event event;
+		pollEvents(event, false);
+
+		
 	}
 
+	return show();
+}
+
+int Menu::show() {
 	switch (renderMain())
 	{
 	case 0:
-		return newGame();
-		break;
+		return newGame(0);
 	case 1:
 		return loadGame();
-		break;
 	case 2:
 		return rank();
-		break;
-	case 3: 
+	case 4: 
 		return instruction();
-		break;
-	case 4:
+	case 5:
 		return exitGame();
-		break;
 	default:
-		break;
+		return -1;
 	}
+}
+
+void Menu::start() {
+	show();
 }
 
 template <class T>

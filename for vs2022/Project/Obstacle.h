@@ -20,3 +20,4 @@ public:
 	void makeSound(); 
 	virtual bool checkType(); 
 };
+

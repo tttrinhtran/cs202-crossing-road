@@ -3,6 +3,8 @@
 #include "Game.h"
 #include "Snowfall.h"
 
+#include <string.h>
+
 //0 : new game
 //1 : load game
 //2 : instruction 
@@ -29,14 +31,17 @@ public:
 	Menu();
 	virtual ~Menu();
 
-	void pollEvents();
+	void start();
+
+	int show();
+	bool pollEvents(sf::Event &event, bool forceReturn);
 	void play_sound();
 	std::string set_sound();
 	void renderBackground(sf::RenderWindow& window);
 	//Menu list of choice
 	int renderMain();
 	int newGame(const int& level = 1);
-	int saveGame(const int& level);
+	int saveGame(const int& level, std::string fileName, std::string additionalInfo, bool allowDup);
 	int loadLevel(const sf::String& name);
 	int subMenu(const int& level);
 	int loseMenu();
@@ -46,5 +51,8 @@ public:
 	void drawBye(); 
 	int exitGame();
 	int instruction();
+
+	int textField(sf::Event event, sf::String &sentence);
 };
 
+// #include "Menu.cpp"
