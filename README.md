@@ -6,10 +6,10 @@ We write this game in C++ with support of SFML, which provides a simple interfac
 
 # Description
 
-The plot of the game is about a santa claus, now he is finding his way back home, after work aka giving out some gifts. But with his naivety, santa needs your help. By default, the main character is a santa claus that must cross a series of busy roads with other characters like candy, wood, reindeer,...
+The plot of the game is about a Santa Claus, now he is finding his way back home, after work aka giving out some gifts. But with his naivety, santa needs your help. By default, the main character is a santa claus that must cross a series of busy roads with other characters like candy, wood, reindeer,...
 
-Mission of the main character that cross the road and overcome obstacles as far as possible.
-The further the player moves, the more challenging it is to player.
+Mission of the main character that is to cross the road and overcome obstacles as far as possible.
+The further the player moves, the more challenging it is for player.
 
 # Feature
 
@@ -25,10 +25,16 @@ Traffic lights to reduce game difficulty
 You just need to press the keys: WASD to make your character move left, right, up or down.
 
 # Member
-Phạm Gia Thịnh
+Phạm Gia Thịnh - 21125064
 
-Trịnh Trân Trân
+Trịnh Trân Trân - 21125074 
 
-Ngô Hà Định
+Ngô Hà Định - 21125075
 
-Nguyễn Xuân Hoà
+Nguyễn Xuân Hoà - 21125111
+
+# Github Link 
+https://github.com/tttrinhtran/cs202-crossing-road
+
+# Video Demo Link 
+https://drive.google.com/file/d/1zeg9KySDAYOe0oyF7QsvTaYw5D-hkylA/view
